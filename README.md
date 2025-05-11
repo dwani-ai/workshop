@@ -6,6 +6,55 @@ dwani.ai is a self-hosted GenAI platform designed to provide voice mode interact
 
 [dwani.ai - Workshop Slides](https://tinyurl.com/dwani-ai-workshop)
 
+### Install the library
+```bash
+pip install dwani
+```
+
+### Setup the credentials
+```python
+import dwani
+import os
+
+dwani.api_key = os.getenv("DWANI_API_KEY")
+
+dwani.api_base = os.getenv("DWANI_API_BASE_URL")
+```
+
+### Examples
+
+#### Text Query 
+```python
+resp = dwani.Chat.create(prompt="Hello!", src_lang="eng_Latn", tgt_lang="kan_Knda")
+print(resp)
+```
+
+#### Vision Query
+```python
+result = dwani.Vision.caption(
+    file_path="image.png",
+    query="Describe this logo",
+    src_lang="eng_Latn",
+    tgt_lang="kan_Knda"
+)
+print(result)
+```
+
+#### Speech to Text -  Automatic Speech Recognition (ASR)
+```python
+result = dwani.ASR.transcribe(file_path="kannada_sample.wav", language="kannada")
+print(result)
+```
+
+#### Text to Speech -  Speech Synthesis
+
+```python
+response = dwani.Audio.speech(input="ಕರ್ನಾಟಕ ದ ರಾಜಧಾನಿ ಯಾವುದು", response_format="mp3")
+with open("output.mp3", "wb") as f:
+    f.write(response)
+```
+
+
 ## Workshop steps
 
 ### For Development 
@@ -38,13 +87,13 @@ dwani.ai is a self-hosted GenAI platform designed to provide voice mode interact
 
 | Feature                  | Command                                      | Web UX Link                                                                 | Server  |
 |--------------------------|----------------------------------------------|----------------------------------------------|-----------------------------------------------------------------------------|
-| Chat / Text Answer       | `python src/chat-dwani.py`                  | [Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-chat)            |[https://github.com/slabstech/llm-indic-server](https://github.com/slabstech/llm-indic-server)|
-| Image Query              | `python src/image-query.py`                  | [Image Query UX](https://huggingface.co/spaces/dwani/dwani-ai-image-query) | [https://github.com/slabstech/llm-indic-server](https://github.com/slabstech/llm-indic-server)|
-| Translate                | `python src/translate-dwani.py`             | [Translate UX](https://huggingface.co/spaces/dwani/dwani-ai-translate)  |[https://github.com/slabstech/indic-translate-server](https://github.com/slabstech/indic-translate-server)|
-| Speech to Text / ASR     | `python src/transcribe-dwani.py`            | [ASR/ Speech to Text UX](https://huggingface.co/spaces/dwani/asr-transcription) |[https://github.com/slabstech/asr-indic-server](https://github.com/slabstech/asr-indic-server)|
-| Text to Speech           | `python src/text-to-speech-dwani.py`        | [Text to Speech UX](https://huggingface.co/spaces/dwani/text-to-speech-synthesis) | [https://github.com/slabstech/tts-indic-server](https://github.com/slabstech/tts-indic-server)|
-| PDF Chat                 | `python src/pdf-chat-dwani.py`              | [PDF Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-pdf-chat)    |[https://github.com/slabstech/docs-indic-server](https://github.com/slabstech/docs-indic-server)|
-| Kannada -  PDF Extraction,Translation and Creation | `python src/vllm/kannada-pdf.py`              | [kannada PDF ](https://huggingface.co/spaces/dwani/kannada-pdf-prompt)    |[https://github.com/slabstech/docs-indic-server](https://github.com/slabstech/docs-indic-server)|
+| Chat / Text Answer       | `python src/chat-dwani.py`                  | [Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-chat)            |[https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
+| Image Query              | `python src/image-query.py`                  | [Image Query UX](https://huggingface.co/spaces/dwani/dwani-ai-image-query) | [https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
+| Translate                | `python src/translate-dwani.py`             | [Translate UX](https://huggingface.co/spaces/dwani/dwani-ai-translate)  |[https://github.com/dwani-ai/indic-translate-server](https://github.com/dwani-ai/indic-translate-server)|
+| Speech to Text / ASR     | `python src/transcribe-dwani.py`            | [ASR/ Speech to Text UX](https://huggingface.co/spaces/dwani/asr-transcription) |[https://github.com/dwani-ai/asr-indic-server](https://github.com/dwani-ai/asr-indic-server)|
+| Text to Speech           | `python src/text-to-speech-dwani.py`        | [Text to Speech UX](https://huggingface.co/spaces/dwani/text-to-speech-synthesis) | [https://github.com/dwani-ai/tts-indic-server](https://github.com/dwani-ai/tts-indic-server)|
+| PDF Chat                 | `python src/pdf-chat-dwani.py`              | [PDF Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-pdf-chat)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
+| Kannada -  PDF Extraction,Translation and Creation | `python src/vllm/kannada-pdf.py`              | [kannada PDF ](https://huggingface.co/spaces/dwani/kannada-pdf-prompt)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
 
 
 
@@ -58,20 +107,6 @@ dwani.ai is a self-hosted GenAI platform designed to provide voice mode interact
 - dwani - Intoduction to Project
 [![Watch the video](https://img.youtube.com/vi/kqZZZjbeNVk/hqdefault.jpg)](https://youtu.be/kqZZZjbeNVk)
 
-
-## Models and Tools
-
-The project utilizes the following open-source tools:
-
-| Open-Source Tool                       | Source Repository                                          | 
-|---------------------------------------|-------------------------------------------------------------|
-| Automatic Speech Recognition : ASR   | [ASR Indic Server](https://github.com/slabstech/asr-indic-server) | 
-| Text to Speech : TTS                  | [TTS Indic Server](https://github.com/slabstech/tts-indic-server)  | 
-| Translation                           | [Indic Translate Server](https://github.com/slabstech/indic-translate-server) | 
-| Document Parser                       | [Indic Document Server](https://github.com/slabstech/docs-indic-server) |
-| dwani Server | [dwani Server](https://github.com/slabstech/dwani-server) | 
-| dwani Android | [Android](https://github.com/slabstech/dwani-android) |
-| Large Language Model                  | [LLM Indic Server](https://github.com/slabstech/llm-indic-server_cpu) | 
 
 
 ## Architecture

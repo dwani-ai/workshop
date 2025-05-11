@@ -1,38 +1,16 @@
 import gradio as gr
 import requests
 
+import dwani
+import os
+
+dwani.api_key = os.getenv("DWANI_API_KEY")
+
+dwani.api_base = os.getenv("DWANI_API_BASE_URL")
+
 def chat_api(prompt, language, tgt_language):  
-
-    import os
-
-    # Get the base URL (IP or domain) from environment variable
-    base_url = os.getenv("DWANI_AI_API_BASE_URL")
-
-    if not base_url:
-        raise ValueError("DWANI_AI_API_BASE_URL environment variable is not set")
-
-    # Define the endpoint path
-    endpoint = "/v1/indic_chat"
-
-        # Construct the full API URL
-    url = f"{base_url.rstrip('/')}{endpoint}"
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json"
-    }
-    
-    payload = {
-        "prompt": prompt,
-        "src_lang": language,
-        "tgt_lang": tgt_language
-    }
-    
-    try:
-        response = requests.post(url, headers=headers, json=payload)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        return f"Error: {str(e)}"
+    resp = dwani.Chat.create(prompt, language, tgt_language)
+    return resp
 
 # Create Gradio interface
 with gr.Blocks(title="Chat API Interface") as demo:

@@ -1,60 +1,26 @@
 import gradio as gr
 import requests
 from PIL import Image
-import io
+
+import dwani
+import os
+
+dwani.api_key = os.getenv("DWANI_API_KEY")
+
+dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
 def visual_query(image, src_lang, tgt_lang, prompt):
     # API endpoint
 
-    import os
 
-    # Get the base URL (IP or domain) from environment variable
-    base_url = os.getenv("DWANI_AI_API_BASE_URL")
-
-    if not base_url:
-        raise ValueError("DWANI_AI_API_BASE_URL environment variable is not set")
-
-    # Define the endpoint path
-    endpoint = "/v1/indic_visual_query"
-
-    # Construct the full API URL
-    url = f"{base_url.rstrip('/')}{endpoint}"
-
-    # Prepare the query parameters
-    params = {
-        "src_lang": src_lang,
-        "tgt_lang": tgt_lang
-    }
-
-    # Convert the image to bytes
-    img_byte_arr = io.BytesIO()
-    image.save(img_byte_arr, format='PNG')
-    img_byte_arr = img_byte_arr.getvalue()
-
-    # Prepare the files and data for the POST request
-    files = {
-        'file': ('image.png', img_byte_arr, 'image/png')
-    }
-    data = {
-        'query': prompt
-    }
-
-    # Set headers
-    headers = {
-        'accept': 'application/json'
-    }
-
-    try:
-        # Send the POST request
-        response = requests.post(url, params=params, headers=headers, files=files, data=data)
-        
-        # Check if the request was successful
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return f"Error: {response.status_code} - {response.text}"
-    except Exception as e:
-        return f"Exception occurred: {str(e)}"
+    result = dwani.Vision.caption(
+        file_path=image,
+        query=prompt ,
+        src_lang=src_lang,
+        tgt_lang=tgt_lang
+    )
+    print(result)
+    return result
 
 # Create Gradio interface
 iface = gr.Interface(
