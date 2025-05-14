@@ -1,16 +1,36 @@
 import gradio as gr
 import requests
-
 import dwani
 import os
 
-dwani.api_key = os.getenv("DWANI_API_KEY")
-
+# Set API key and base URL
+api_key = os.getenv("DWANI_API_KEY")
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
-def chat_api(prompt, language, tgt_language):  
-    resp = dwani.Chat.create(prompt, language, tgt_language)
-    return resp
+def chat_api(prompt, language, tgt_language):
+    # Configure headers with Bearer token
+    headers = {
+        "Authorization": f"Bearer {api_key}"
+    }
+    
+    # Assuming dwani.Chat.create accepts headers; adjust if the library uses a different method
+    try:
+        resp = dwani.Chat.create(
+            prompt=prompt,
+            language=language,
+            tgt_language=tgt_language,
+            headers=headers  # Pass headers if supported
+        )
+        return resp
+    except Exception as e:
+        return {"error": str(e)}
+
+# Language options
+language_options = [
+    ("English", "eng_Latn"),
+    ("Kannada", "kan_Knda"),
+    ("Hindi", "hin_Deva")
+]
 
 # Create Gradio interface
 with gr.Blocks(title="Chat API Interface") as demo:
@@ -23,15 +43,17 @@ with gr.Blocks(title="Chat API Interface") as demo:
                 label="Prompt",
                 placeholder="Enter your prompt here (e.g., 'hi')"
             )
-            language_input = gr.Textbox(
+            language_input = gr.Dropdown(
                 label="Source Language",
-                placeholder="Enter source language code (e.g., 'eng_Latn')",
-                value="eng_Latn"
+                choices=language_options,
+                value="eng_Latn",
+                type="value"
             )
-            tgt_language_input = gr.Textbox(
+            tgt_language_input = gr.Dropdown(
                 label="Target Language",
-                placeholder="Enter target language code (e.g., 'eng_Latn')",
-                value="eng_Latn"
+                choices=language_options,
+                value="eng_Latn",
+                type="value"
             )
             
             submit_btn = gr.Button("Submit")
