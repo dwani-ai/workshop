@@ -4,35 +4,20 @@ import urllib.parse
 import tempfile
 import os
 
+import dwani
+dwani.api_key = os.getenv("DWANI_API_KEY")
+
+dwani.api_base = os.getenv("DWANI_API_BASE_URL")
+
 def text_to_speech(text):
     # Validate input
-    if not text or not isinstance(text, str):
-        raise ValueError("Input text must be a non-empty string")
-
-    # Get the base URL from environment variable
-    base_url = os.getenv("DWANI_AI_API_BASE_URL")
-    if not base_url:
-        raise ValueError("DWANI_AI_API_BASE_URL environment variable is not set")
-
-    # Define the endpoint path
-    endpoint = "/v1/audio/speech"
-    
-    # Construct query parameters
-    query_params = urllib.parse.urlencode({"input": text, "response_format": "mp3"})
-    url = f"{base_url.rstrip('/')}{endpoint}?{query_params}"
-
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json"
-    }
     
     try:
-        response = requests.post(url, headers=headers, json={})
-        response.raise_for_status()
+        response = dwani.Audio.speech(input=text, response_format="mp3")
         
         # Save the audio content to a temporary file
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_file:
-            temp_file.write(response.content)
+            temp_file.write(response)
             temp_file_path = temp_file.name
         
         return temp_file_path
