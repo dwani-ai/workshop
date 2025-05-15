@@ -1,4 +1,4 @@
-# dwani.ai - Your Kannada Speaking Voice Buddy
+# dwani.ai - Knowledge Through Voice
 
 ## Overview
 
@@ -93,8 +93,6 @@ with open("output.mp3", "wb") as f:
 | Speech to Text / ASR     | `python src/transcribe-dwani.py`            | [ASR/ Speech to Text UX](https://huggingface.co/spaces/dwani/asr-transcription) |[https://github.com/dwani-ai/asr-indic-server](https://github.com/dwani-ai/asr-indic-server)|
 | Text to Speech           | `python src/text-to-speech-dwani.py`        | [Text to Speech UX](https://huggingface.co/spaces/dwani/text-to-speech-synthesis) | [https://github.com/dwani-ai/tts-indic-server](https://github.com/dwani-ai/tts-indic-server)|
 | PDF Chat                 | `python src/pdf-chat-dwani.py`              | [PDF Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-pdf-chat)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
-| Kannada -  PDF Extraction,Translation and Creation | `python src/vllm/kannada-pdf.py`              | [kannada PDF ](https://huggingface.co/spaces/dwani/kannada-pdf-prompt)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
-
 
 
 ## Video Tutorials

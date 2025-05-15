@@ -1,39 +1,65 @@
 import gradio as gr
 import requests
 from PIL import Image
-
 import dwani
 import os
+import tempfile
 
 dwani.api_key = os.getenv("DWANI_API_KEY")
-
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
+# Language options
+language_options = [
+    ("English", "eng_Latn"),
+    ("Kannada", "kan_Knda"),
+    ("Hindi", "hin_Deva")
+]
+
 def visual_query(image, src_lang, tgt_lang, prompt):
-    # API endpoint
+    # Save PIL Image to a temporary file
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+        image.save(temp_file.name, format="PNG")  # Explicitly save as PNG
+        temp_file_path = temp_file.name
 
-
-    result = dwani.Vision.caption(
-        file_path=image,
-        query=prompt ,
-        src_lang=src_lang,
-        tgt_lang=tgt_lang
-    )
-    print(result)
-    return result
+    try:
+        # Call the API with the file path
+        result = dwani.Vision.caption(
+            file_path=temp_file_path,
+            query=prompt,
+            src_lang=src_lang,
+            tgt_lang=tgt_lang
+        )
+        print(result)
+        return result
+    finally:
+        # Clean up the temporary file
+        os.unlink(temp_file_path)
 
 # Create Gradio interface
 iface = gr.Interface(
     fn=visual_query,
     inputs=[
         gr.Image(type="pil", label="Upload Image"),
-        gr.Textbox(label="Source Language (e.g., kan_Knda)", placeholder="kan_Knda"),
-        gr.Textbox(label="Target Language (e.g., kan_Knda)", placeholder="kan_Knda"),
-        gr.Textbox(label="Prompt", placeholder="e.g., describe the image")
+        gr.Dropdown(
+            choices=language_options,
+            label="Source Language",
+            value="eng_Latn",  # Default value
+            info="Select the source language for the query"
+        ),
+        gr.Dropdown(
+            choices=language_options,
+            label="Target Language",
+            value="kan_Knda",  # Default value
+            info="Select the target language for the response"
+        ),
+        gr.Textbox(
+            label="Prompt",
+            placeholder="e.g., describe the image"
+        )
     ],
     outputs=gr.JSON(label="API Response"),
     title="Visual Query API Interface",
-    description="Upload an image, specify source and target languages, and provide a prompt to query the visual API."
+    description="Upload an image, select source and target languages, and provide a prompt to query the visual API."
 )
 
 # Launch the interface
