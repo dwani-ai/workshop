@@ -16,7 +16,7 @@ from config.logging_config import logger
 
 # FastAPI app setup with enhanced docs
 app = FastAPI(
-    title="dwani API",
+    title="Dhwani API",
     description="A multilingual AI-powered API supporting Indian languages for chat, text-to-speech, audio processing, and transcription.",
     version="1.0.0",
     redirect_slashes=False,
@@ -364,7 +364,7 @@ async def translate(
 
     logger.info(f"Received translation request: {len(request.sentences)} sentences, src_lang: {request.src_lang}, tgt_lang: {request.tgt_lang}")
 
-    external_url = f"{os.getenv('EXTERNAL_API_BASE_URL')}/v1/translate"
+    external_url = f"{os.getenv('DWANI_API_BASE_URL_TRANSLATE')}"
 
     payload = {
         "sentences": request.sentences,
@@ -374,7 +374,7 @@ async def translate(
 
     try:
         response = requests.post(
-            external_url,
+            f"{external_url}/translate?src_lang={request.src_lang}&tgt_lang={request.tgt_lang}",
             json=payload,
             headers={
                 "accept": "application/json",
