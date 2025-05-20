@@ -8,12 +8,8 @@ import tempfile
 dwani.api_key = os.getenv("DWANI_API_KEY")
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
-# Language options
-language_options = [
-    ("English", "eng_Latn"),
-    ("Kannada", "kan_Knda"),
-    ("Hindi", "hin_Deva")
-]
+# Language options as simple array
+language_options = ["english", "kannada", "hindi"]
 
 def visual_query(image, src_lang, tgt_lang, prompt):
     # Save PIL Image to a temporary file
@@ -43,13 +39,13 @@ iface = gr.Interface(
         gr.Dropdown(
             choices=language_options,
             label="Source Language",
-            value="eng_Latn",  # Default value
+            value="english",  # Default value
             info="Select the source language for the query"
         ),
         gr.Dropdown(
             choices=language_options,
             label="Target Language",
-            value="kan_Knda",  # Default value
+            value="kannada",  # Default value
             info="Select the target language for the response"
         ),
         gr.Textbox(

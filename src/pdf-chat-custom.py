@@ -16,18 +16,8 @@ dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 logger.debug("DWANI_API_KEY: %s", "Set" if dwani.api_key else "Not set")
 logger.debug("DWANI_API_BASE_URL: %s", dwani.api_base)
 
-# Language options for dropdowns
-language_options = [
-    ("English", "eng_Latn"),
-    ("Kannada", "kan_Knda"),
-    ("Hindi", "hin_Deva")
-]
-
-# Create lists for Gradio dropdowns (display names only)
-language_names = [lang[0] for lang in language_options]
-
-# Map display names to language codes
-lang_code_map = {lang[0]: lang[1] for lang in language_options}
+# Language options as simple array
+language_options = ["english", "kannada", "hindi"]
 
 def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
     logger.debug("Received inputs - PDF: %s, Page: %s, Prompt: %s, Source Lang: %s, Target Lang: %s",
@@ -50,11 +40,8 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
         logger.error("Invalid page number: %s", page_number)
         return {"error": "Page number must be a positive integer"}
     
-    # Get language codes
-    src_lang_code = lang_code_map.get(src_lang)
-    tgt_lang_code = lang_code_map.get(tgt_lang)
-    
-    if not src_lang_code or not tgt_lang_code:
+    # Validate language codes
+    if src_lang not in language_options or tgt_lang not in language_options:
         logger.error("Invalid language selection - Source: %s, Target: %s", src_lang, tgt_lang)
         return {"error": "Invalid source or target language selection"}
     
@@ -62,7 +49,7 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
     file_path = pdf_file.name if hasattr(pdf_file, 'name') else pdf_file
     
     logger.debug("Calling API with file: %s, page: %d, prompt: %s, src_lang: %s, tgt_lang: %s",
-                file_path, page_number, prompt, src_lang_code, tgt_lang_code)
+                file_path, page_number, prompt, src_lang, tgt_lang)
     
     # Call the API
     try:
@@ -70,8 +57,8 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
             file_path=file_path,
             prompt=prompt,
             page_number=page_number,
-            src_lang=src_lang_code,
-            tgt_lang=tgt_lang_code
+            src_lang=src_lang,
+            tgt_lang=tgt_lang
         )
         logger.debug("API response: %s", result)
         return {
@@ -104,13 +91,13 @@ with gr.Blocks(title="PDF Custom Prompt Processor") as demo:
             )
             src_lang_input = gr.Dropdown(
                 label="Source Language",
-                choices=language_names,
-                value="English"
+                choices=language_options,
+                value="english"
             )
             tgt_lang_input = gr.Dropdown(
                 label="Target Language",
-                choices=language_names,
-                value="Kannada"
+                choices=language_options,
+                value="kannada"
             )
             submit_btn = gr.Button("Process")
         
