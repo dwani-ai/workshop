@@ -3,34 +3,15 @@ import requests
 import dwani
 import os
 
-# Set API key and base URL
-api_key = os.getenv("DWANI_API_KEY")
+dwani.api_key = os.getenv("DWANI_API_KEY")
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
-def chat_api(prompt, language, tgt_language):
-    # Configure headers with Bearer token
-    headers = {
-        "Authorization": f"Bearer {api_key}"
-    }
-    
-    # Assuming dwani.Chat.create accepts headers; adjust if the library uses a different method
-    try:
-        resp = dwani.Chat.create(
-            prompt=prompt,
-            language=language,
-            tgt_language=tgt_language,
-            headers=headers  # Pass headers if supported
-        )
-        return resp
-    except Exception as e:
-        return {"error": str(e)}
+def chat_api(prompt, language, tgt_language):  
+    resp = dwani.Chat.create(prompt, language, tgt_language)
+    return resp
 
-# Language options
-language_options = [
-    ("English", "eng_Latn"),
-    ("Kannada", "kan_Knda"),
-    ("Hindi", "hin_Deva")
-]
+# Language options as simple array
+language_options = ["English", "Kannada", "Hindi"]
 
 # Create Gradio interface
 with gr.Blocks(title="Chat API Interface") as demo:
@@ -46,14 +27,12 @@ with gr.Blocks(title="Chat API Interface") as demo:
             language_input = gr.Dropdown(
                 label="Source Language",
                 choices=language_options,
-                value="eng_Latn",
-                type="value"
+                value="English"
             )
             tgt_language_input = gr.Dropdown(
                 label="Target Language",
                 choices=language_options,
-                value="eng_Latn",
-                type="value"
+                value="Kannada"
             )
             
             submit_btn = gr.Button("Submit")

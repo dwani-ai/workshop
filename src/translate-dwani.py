@@ -19,24 +19,12 @@ logger.debug("DWANI_API_BASE_URL: %s", dwani.api_base)
 
 # List of supported languages
 LANGUAGES = [
-    "Assamese (asm_Beng)", "Kashmiri (Arabic) (kas_Arab)", "Punjabi (pan_Guru)",
-    "Bengali (ben_Beng)", "Kashmiri (Devanagari) (kas_Deva)", "Sanskrit (san_Deva)",
-    "Bodo (brx_Deva)", "Maithili (mai_Deva)", "Santali (sat_Olck)",
-    "Dogri (doi_Deva)", "Malayalam (mal_Mlym)", "Sindhi (Arabic) (snd_Arab)",
-    "English (eng_Latn)", "Marathi (mar_Deva)", "Sindhi (Devanagari) (snd_Deva)",
-    "Konkani (gom_Deva)", "Manipuri (Bengali) (mni_Beng)", "Tamil (tam_Taml)",
-    "Gujarati (guj_Gujr)", "Manipuri (Meitei) (mni_Mtei)", "Telugu (tel_Telu)",
-    "Hindi (hin_Deva)", "Nepali (npi_Deva)", "Urdu (urd_Arab)",
-    "Kannada (kan_Knda)", "Odia (ory_Orya)"
+    "Assamese", "Punjabi",
+    "Bengali", "Malayalam ", 
+    "English", "Marathi ", "Tamil",
+    "Gujarati", "Telugu ",
+    "Hindi", "Kannada", "Odia "
 ]
-
-# Function to extract language code from selection
-def get_lang_code(lang_string):
-    try:
-        return lang_string.split("(")[-1].rstrip(")")
-    except IndexError:
-        logger.error("Invalid language string format: %s", lang_string)
-        return None
 
 def translate_api(sentences, src_lang, tgt_lang):
     logger.debug("Received inputs - Sentences: %s, Source Lang: %s, Target Lang: %s", sentences, src_lang, tgt_lang)
@@ -62,8 +50,8 @@ def translate_api(sentences, src_lang, tgt_lang):
         return {"error": "Please provide at least one non-empty sentence"}
     
     # Extract language codes
-    src_lang_code = get_lang_code(src_lang)
-    tgt_lang_code = get_lang_code(tgt_lang)
+    src_lang_code = (src_lang)
+    tgt_lang_code = (tgt_lang)
     
     if not src_lang_code or not tgt_lang_code:
         logger.error("Invalid language codes - Source: %s, Target: %s", src_lang_code, tgt_lang_code)
@@ -100,12 +88,12 @@ with gr.Blocks(title="Translation API Interface") as demo:
             src_lang_input = gr.Dropdown(
                 label="Source Language",
                 choices=LANGUAGES,
-                value="English (eng_Latn)"
+                value="English"
             )
             tgt_lang_input = gr.Dropdown(
                 label="Target Language",
                 choices=LANGUAGES,
-                value="Kannada (kan_Knda)"
+                value="Kannada"
             )
             
             submit_btn = gr.Button("Translate")
