@@ -8,7 +8,7 @@ dwani.ai is a self-hosted GenAI platform designed to provide voice mode interact
 
 ### Install the library
 ```bash
-pip install dwani
+pip install --upgrade dwani
 ```
 
 ### Setup the credentials
@@ -25,7 +25,7 @@ dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
 #### Text Query 
 ```python
-resp = dwani.Chat.create(prompt="Hello!", src_lang="eng_Latn", tgt_lang="kan_Knda")
+resp = dwani.Chat.create(prompt="Hello!", src_lang="english", tgt_lang="kannada")
 print(resp)
 ```
 
@@ -34,8 +34,8 @@ print(resp)
 result = dwani.Vision.caption(
     file_path="image.png",
     query="Describe this logo",
-    src_lang="eng_Latn",
-    tgt_lang="kan_Knda"
+    src_lang="english",
+    tgt_lang="kannada"
 )
 print(result)
 ```
@@ -47,13 +47,24 @@ print(result)
 ```
 
 #### Text to Speech -  Speech Synthesis
-
+- For mp3 file
 ```python
 response = dwani.Audio.speech(input="ಕರ್ನಾಟಕ ದ ರಾಜಧಾನಿ ಯಾವುದು", response_format="mp3")
 with open("output.mp3", "wb") as f:
     f.write(response)
 ```
+- for wav file
+```python
+response = dwani.Audio.speech(input="ಕರ್ನಾಟಕ ದ ರಾಜಧಾನಿ ಯಾವುದು", response_format="wav")
+with open("output.wav", "wb") as f:
+    f.write(response)
+```
 
+### Translate
+``` python
+result = dwani.Translate.run_translate(sentences="hi, how are you?", src_lang="english", tgt_lang="kannada")
+print(result)
+```
 
 ## Workshop steps
 
@@ -85,14 +96,14 @@ with open("output.mp3", "wb") as f:
 
 # dwani.ai Features and Commands
 
-| Feature                  | Command                                      | Web UX Link                                                                 | Server  |
+| Feature                  | Code                                      | Gradio Demo                                                                 | Server  |
 |--------------------------|----------------------------------------------|----------------------------------------------|-----------------------------------------------------------------------------|
-| Chat / Text Answer       | `python src/chat-dwani.py`                  | [Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-chat)            |[https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
-| Image Query              | `python src/image-query.py`                  | [Image Query UX](https://huggingface.co/spaces/dwani/dwani-ai-image-query) | [https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
-| Translate                | `python src/translate-dwani.py`             | [Translate UX](https://huggingface.co/spaces/dwani/dwani-ai-translate)  |[https://github.com/dwani-ai/indic-translate-server](https://github.com/dwani-ai/indic-translate-server)|
-| Speech to Text / ASR     | `python src/transcribe-dwani.py`            | [ASR/ Speech to Text UX](https://huggingface.co/spaces/dwani/asr-transcription) |[https://github.com/dwani-ai/asr-indic-server](https://github.com/dwani-ai/asr-indic-server)|
-| Text to Speech           | `python src/text-to-speech-dwani.py`        | [Text to Speech UX](https://huggingface.co/spaces/dwani/text-to-speech-synthesis) | [https://github.com/dwani-ai/tts-indic-server](https://github.com/dwani-ai/tts-indic-server)|
-| PDF Chat                 | `python src/pdf-chat-dwani.py`              | [PDF Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-pdf-chat)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
+| Chat / Text Answer       | `python intro/llm_chat.py`                  | [Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-chat)            |[https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
+| Vision Query              | `python intro/vision.py`                  | [Vision Query UX](https://huggingface.co/spaces/dwani/dwani-ai-image-query) | [https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
+| Translate                | `python intro/translate.py`             | [Translate UX](https://huggingface.co/spaces/dwani/dwani-ai-translate)  |[https://github.com/dwani-ai/indic-translate-server](https://github.com/dwani-ai/indic-translate-server)|
+| Speech to Text / Transcribe     | `python intro/transcribe.py`            | [ASR/ Speech to Text UX](https://huggingface.co/spaces/dwani/asr-transcription) |[https://github.com/dwani-ai/asr-indic-server](https://github.com/dwani-ai/asr-indic-server)|
+| Text to Speech           | `python intro/text_to_speech.py`        | [Text to Speech UX](https://huggingface.co/spaces/dwani/text-to-speech-synthesis) | [https://github.com/dwani-ai/tts-indic-server](https://github.com/dwani-ai/tts-indic-server)|
+| PDF Query                 | `python intro/pdf_query.py`              | [PDF Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-pdf-chat)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
 
 
 ## Video Tutorials
