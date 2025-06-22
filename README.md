@@ -98,12 +98,12 @@ print(result)
 
 | Feature                  | Code                                      | Gradio Demo                                                                 | Server  |
 |--------------------------|----------------------------------------------|----------------------------------------------|-----------------------------------------------------------------------------|
-| Chat / Text Answer       | `python intro/llm_chat.py`                  | [Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-chat)            |[https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
-| Vision Query              | `python intro/vision.py`                  | [Vision Query UX](https://huggingface.co/spaces/dwani/dwani-ai-image-query) | [https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
-| Translate                | `python intro/translate.py`             | [Translate UX](https://huggingface.co/spaces/dwani/dwani-ai-translate)  |[https://github.com/dwani-ai/indic-translate-server](https://github.com/dwani-ai/indic-translate-server)|
-| Speech to Text / Transcribe     | `python intro/transcribe.py`            | [ASR/ Speech to Text UX](https://huggingface.co/spaces/dwani/asr-transcription) |[https://github.com/dwani-ai/asr-indic-server](https://github.com/dwani-ai/asr-indic-server)|
-| Text to Speech           | `python intro/text_to_speech.py`        | [Text to Speech UX](https://huggingface.co/spaces/dwani/text-to-speech-synthesis) | [https://github.com/dwani-ai/tts-indic-server](https://github.com/dwani-ai/tts-indic-server)|
-| PDF Query                 | `python intro/pdf_query.py`              | [PDF Chat UX](https://huggingface.co/spaces/dwani/dwani-ai-pdf-chat)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
+| Chat / Text Answer       | `python intro/llm_chat.py`                  | [Chat UX](https://chat-demo.dwani.ai)            |[https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
+| Vision Query              | `python intro/vision.py`                  | [Vision Query UX](https://vision-demo.dwani.ai) | [https://github.com/dwani-ai/llm-indic-server](https://github.com/dwani-ai/llm-indic-server)|
+| Translate                | `python intro/translate.py`             | [Translate UX](https://translate-demo.dwani.ai)  |[https://github.com/dwani-ai/indic-translate-server](https://github.com/dwani-ai/indic-translate-server)|
+| Speech to Text / Transcribe     | `python intro/transcribe.py`            | [ASR/ Speech to Text UX](https://asr-demo.dwani.ai) |[https://github.com/dwani-ai/asr-indic-server](https://github.com/dwani-ai/asr-indic-server)|
+| Text to Speech           | `python intro/text_to_speech.py`        | [Text to Speech UX](https://tts-demo.dwani.ai) | [https://github.com/dwani-ai/tts-indic-server](https://github.com/dwani-ai/tts-indic-server)|
+| PDF Query                 | `python intro/pdf_query.py`              | [PDF Chat UX](https://docs-demo.dwani.ai)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
 
 
 ## Video Tutorials
