@@ -4,7 +4,7 @@
 
 dwani.ai is a self-hosted GenAI platform designed to provide voice mode interaction for Kannada and other Indian languages. 
 
-[dwani.ai - Workshop Slides](https://tinyurl.com/dwani-ai-workshop)
+[dwani.ai - Workshop Slides](https://dwani.ai/dwani-ai-workshop.pdf)
 
 ### Install the library
 ```bash
@@ -49,7 +49,7 @@ print(result)
 #### Text to Speech -  Speech Synthesis
 - For mp3 file
 ```python
-response = dwani.Audio.speech(input="ಕರ್ನಾಟಕ ದ ರಾಜಧಾನಿ ಯಾವುದು", response_format="mp3")
+response = dwani.Audio.speech(input="ಕರ್ನಾಟಕದ ರಾಜಧಾನಿ ಯಾವುದು", response_format="mp3")
 with open("output.mp3", "wb") as f:
     f.write(response)
 ```
@@ -89,12 +89,14 @@ print(result)
     ```
 
 - To Run the program
-  - DWANI_AI_API_BASE_URL environement variable has to be set
-    - export DWANI_AI_API_BASE_URL=http://example.com:example-port
+  - DWANI_API_BASE_URL and DWANI_API_KEY environement variable has to be set
+    - export DWANI_API_BASE_URL=http://example.com
+    - export DWANI_API_KEY='your_api_key_here'
+
   - Please email us to get the IP for dwani.ai - workshop inference server
 
 
-# dwani.ai Features and Commands
+### dwani.ai Features and Commands
 
 | Feature                  | Code                                      | Gradio Demo                                                                 | Server  |
 |--------------------------|----------------------------------------------|----------------------------------------------|-----------------------------------------------------------------------------|

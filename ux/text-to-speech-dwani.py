@@ -6,14 +6,21 @@ import os
 
 import dwani
 dwani.api_key = os.getenv("DWANI_API_KEY")
-
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
-def text_to_speech(text):
+def text_to_speech(text, language):
     # Validate input
+    if not text:
+        raise ValueError("Text input cannot be empty")
+    
     
     try:
-        response = dwani.Audio.speech(input=text, response_format="mp3")
+        # Assuming Dwani API accepts a language parameter
+        response = dwani.Audio.speech(
+            input=text,
+            response_format="mp3",
+            language=language  # Adjust parameter name as per API
+        )
         
         # Save the audio content to a temporary file
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_file:
@@ -38,6 +45,11 @@ with gr.Blocks(title="Text to Speech API Interface") as demo:
                 placeholder="Enter text to convert to speech",
                 value="ಕರ್ನಾಟಕದ ರಾಜಧಾನಿ ಬೆಂಗಳೂರು."
             )
+            language_select = gr.Dropdown(
+                label="Language",
+                choices=["kannada", "english", "telugu", "hindi" , "german"],
+                value="kannada"
+            )
             submit_btn = gr.Button("Generate Speech")
         
         with gr.Column():
@@ -51,7 +63,7 @@ with gr.Blocks(title="Text to Speech API Interface") as demo:
     # Connect the button click to the API function
     submit_btn.click(
         fn=text_to_speech,
-        inputs=[text_input],
+        inputs=[text_input, language_select],
         outputs=audio_output
     )
 
