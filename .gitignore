@@ -10,7 +10,7 @@ __pycache__/
 node_modules/
 !samples/kannada_sample_1.wav
 !samples/kannada_sample_2.wav
-
+resume.txt
 # Distribution / packaging
 .Python
 build/
