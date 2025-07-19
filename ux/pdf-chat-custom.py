@@ -51,21 +51,23 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
     logger.debug("Calling API with file: %s, page: %d, prompt: %s, src_lang: %s, tgt_lang: %s",
                 file_path, page_number, prompt, src_lang, tgt_lang)
     
+
+
+    
     # Call the API
     try:
-        result = dwani.Documents.run_doc_query(
-            file_path=file_path,
-            prompt=prompt,
-            page_number=page_number,
-            src_lang=src_lang,
-            tgt_lang=tgt_lang
+        result = dwani.Documents.query_all(
+            file_path, model="gemma3", tgt_lang="kan_Knda", prompt=prompt
         )
         logger.debug("API response: %s", result)
+
+        result["translated_query_answer"]
         return {
             "Original Text": result.get("original_text", "N/A"),
-            "Response": result.get("response", "N/A"),
-            "Processed Page": result.get("processed_page", "N/A"),
-            "Translated Response": result.get("translated_response", "N/A")
+            
+            "Response": result.get("query_answer", "N/A"),
+            
+            "Translated Response": result.get("translated_query_answer", "N/A")
         }
     except dwani.exceptions.DhwaniAPIError as e:
         logger.error("Dhwani API error: %s", str(e))
