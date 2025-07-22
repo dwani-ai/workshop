@@ -130,4 +130,10 @@ print(result)
 
 nohup python src/server/main.py --port 7860 > server.log 2>&1 &
 
+docker build -t dwani/workshop:latest -f Dockerfile .
+docker push dwani/workshop:latest
+
+docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url> dhwani-suite
+
+
 -->
