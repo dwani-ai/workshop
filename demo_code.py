@@ -197,9 +197,9 @@ def text_to_speech(text, language):
         return None
 
 # --- Gradio Interface ---
-with gr.Blocks(title="Dhwani API Suite") as demo:
-    gr.Markdown("# Dhwani API Suite")
-    gr.Markdown("A comprehensive interface for Dhwani APIs: Chat, Image Query, Transcription, Translation, PDF Processing, Resume Translation, and Text-to-Speech.")
+with gr.Blocks(title="dwani.ai API Suite") as demo:
+    gr.Markdown("# dwani.ai API Suite")
+    gr.Markdown("A comprehensive interface for dwani.ai APIs: Chat, Image Query, Transcription, Translation, PDF Processing, Resume Translation, and Text-to-Speech.")
 
     with gr.Tabs():
         # Chat Tab
