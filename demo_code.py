@@ -337,7 +337,7 @@ with gr.Blocks(title="Dhwani API Suite") as demo:
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=7860)
+        demo.launch(server_name="0.0.0.0", server_port=80)
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")
