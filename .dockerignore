@@ -4,6 +4,9 @@ samples
 venv
 *.nemo
 
+docs 
+misc
+samples
 # Ignore all Python files except those explicitly copied
 *.pyc
 *.pyo
