@@ -1,10 +1,14 @@
-# dwani.ai - Knowledge Through Voice
+# dwani.ai - Knowledge from Curiosity
 
 ## Overview
 
-dwani.ai is a self-hosted GenAI platform designed to provide voice mode interaction for Kannada and other Indian languages. 
+dwani.ai is a Multimodal Document Analytics platform 
+
+It can be self-hosted and designed for Indian + European languages . 
 
 [dwani.ai - Workshop Slides](https://dwani.ai/dwani-ai-workshop.pdf)
+
+[live demo : https://workshop.dwani.ai](https://workshop.dwani.ai)
 
 ### Install the library
 ```bash
