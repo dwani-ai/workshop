@@ -6,9 +6,9 @@ dwani.ai is a Multimodal Document Analytics platform
 
 It can be self-hosted and designed for Indian + European languages . 
 
-[dwani.ai - Workshop Slides](https://dwani.ai/dwani-ai-workshop.pdf)
+- Download PDF - [dwani.ai - Workshop Slides](https://dwani.ai/dwani-ai-workshop.pdf)
 
-[live demo : https://workshop.dwani.ai](https://workshop.dwani.ai)
+- live demo - [https://workshop.dwani.ai](https://workshop.dwani.ai)
 
 ### Install the library
 ```bash
@@ -114,11 +114,12 @@ print(result)
 
 ## Video Tutorials
 
+<!-- 
 
 - dwani - How to use - dwani AI - Workshop:  20th March, 2025
 [![Watch the video](https://img.youtube.com/vi/RLIhG1bt8gw/hqdefault.jpg)](https://youtu.be/f5JkJLQJFGA)
 
-
+-->
 - dwani - Intoduction to Project
 [![Watch the video](https://img.youtube.com/vi/kqZZZjbeNVk/hqdefault.jpg)](https://youtu.be/kqZZZjbeNVk)
 
@@ -128,7 +129,7 @@ print(result)
 
 | Answer Engine| Answer Engine with Translation                                 | Voice Translation                          |
 |----------|-----------------------------------------------|---------------------------------------------|
-| ![Answer Engine](docs/kannada-answer-engine.drawio.png "Engine") | ![Answer Engine Translation](docs/kannada-answer-engine-translate.png "Engine") | ![Voice Translation](docs/voice-translation.drawio.png "Voice Translation") |
+| ![Answer Engine](docs/images/kannada-answer-engine.drawio.png "Engine") | ![Answer Engine Translation](docs/images/kannada-answer-engine-translate.png "Engine") | ![Voice Translation](docs/images/voice-translation.drawio.png "Voice Translation") |
 
 <!-- 
 
@@ -142,3 +143,5 @@ docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<you
 docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL dwani/workshop:latest
 
 -->
+
+- Project is MIT Licensed
