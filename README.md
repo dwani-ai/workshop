@@ -1,10 +1,14 @@
-# dwani.ai - Knowledge Through Voice
+# dwani.ai - Knowledge from Curiosity
 
 ## Overview
 
-dwani.ai is a self-hosted GenAI platform designed to provide voice mode interaction for Kannada and other Indian languages. 
+dwani.ai is a Multimodal Document Analytics platform 
 
-[dwani.ai - Workshop Slides](https://dwani.ai/dwani-ai-workshop.pdf)
+It can be self-hosted and designed for Indian + European languages . 
+
+- Download PDF - [dwani.ai - Workshop Slides](https://dwani.ai/dwani-ai-workshop.pdf)
+
+- live demo - [https://workshop.dwani.ai](https://workshop.dwani.ai)
 
 ### Install the library
 ```bash
@@ -87,9 +91,13 @@ print(result)
   - ```bash
     pip install -r requirements.txt
     ```
+  4. **Run the Program**:
+  - ```bash
+    python workshop_demo.py
+    ```
 
 - To Run the program
-  - DWANI_API_BASE_URL and DWANI_API_KEY environement variable has to be set
+  - DWANI_API_BASE_URL and DWANI_API_KEY environment variables has to be set
     - export DWANI_API_BASE_URL=http://example.com
     - export DWANI_API_KEY='your_api_key_here'
 
@@ -108,26 +116,36 @@ print(result)
 | PDF Query                 | `python intro/pdf_query.py`              | [PDF Chat UX](https://docs-demo.dwani.ai)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
 
 
-## Video Tutorials
+<!-- 
 
+## Video Tutorials
 
 - dwani - How to use - dwani AI - Workshop:  20th March, 2025
 [![Watch the video](https://img.youtube.com/vi/RLIhG1bt8gw/hqdefault.jpg)](https://youtu.be/f5JkJLQJFGA)
 
-
 - dwani - Intoduction to Project
 [![Watch the video](https://img.youtube.com/vi/kqZZZjbeNVk/hqdefault.jpg)](https://youtu.be/kqZZZjbeNVk)
 
+-->
 
 
 ## Architecture
 
 | Answer Engine| Answer Engine with Translation                                 | Voice Translation                          |
 |----------|-----------------------------------------------|---------------------------------------------|
-| ![Answer Engine](docs/kannada-answer-engine.drawio.png "Engine") | ![Answer Engine Translation](docs/kannada-answer-engine-translate.png "Engine") | ![Voice Translation](docs/voice-translation.drawio.png "Voice Translation") |
+| ![Answer Engine](docs/images/kannada-answer-engine.drawio.png "Engine") | ![Answer Engine Translation](docs/images/kannada-answer-engine-translate.png "Engine") | ![Voice Translation](docs/images/voice-translation.drawio.png "Voice Translation") |
 
 <!-- 
 
 nohup python src/server/main.py --port 7860 > server.log 2>&1 &
 
+docker build -t dwani/workshop:latest -f Dockerfile .
+docker push dwani/workshop:latest
+
+docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url> dwani/workshop:latest
+
+docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL dwani/workshop:latest
+
 -->
+
+- Project is MIT Licensed
