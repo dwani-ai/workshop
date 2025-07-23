@@ -203,6 +203,30 @@ with gr.Blocks(title="dwani.ai API Suite") as demo:
 
     with gr.Tabs():
         # Chat Tab
+                # PDF Processing Tab
+        with gr.Tab("PDF Query"):
+            gr.Markdown("Query PDF files with a custom prompt")
+            with gr.Row():
+                with gr.Column():
+                    pdf_input = gr.File(label="Upload PDF", file_types=[".pdf"])
+                    pdf_page = gr.Number(label="Page Number", value=1, minimum=1, precision=0)
+                    pdf_prompt = gr.Textbox(
+                        label="Custom Prompt",
+                        placeholder="e.g., List the key points",
+                        value="List the key points",
+                        lines=3
+                    )
+                    pdf_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
+                    pdf_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
+                    pdf_submit = gr.Button("Process")
+                with gr.Column():
+                    pdf_output = gr.JSON(label="PDF Response")
+            pdf_submit.click(
+                fn=process_pdf,
+                inputs=[pdf_input, pdf_page, pdf_prompt, pdf_src_lang, pdf_tgt_lang],
+                outputs=pdf_output
+            )
+
         with gr.Tab("Chat"):
             gr.Markdown("Interact with the Chat API")
             with gr.Row():
@@ -273,30 +297,6 @@ with gr.Blocks(title="dwani.ai API Suite") as demo:
                 fn=translate_api,
                 inputs=[trans_sentences, trans_src_lang, trans_tgt_lang],
                 outputs=trans_output
-            )
-
-        # PDF Processing Tab
-        with gr.Tab("PDF Processing"):
-            gr.Markdown("Process PDF files with a custom prompt")
-            with gr.Row():
-                with gr.Column():
-                    pdf_input = gr.File(label="Upload PDF", file_types=[".pdf"])
-                    pdf_page = gr.Number(label="Page Number", value=1, minimum=1, precision=0)
-                    pdf_prompt = gr.Textbox(
-                        label="Custom Prompt",
-                        placeholder="e.g., List the key points",
-                        value="List the key points",
-                        lines=3
-                    )
-                    pdf_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
-                    pdf_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
-                    pdf_submit = gr.Button("Process")
-                with gr.Column():
-                    pdf_output = gr.JSON(label="PDF Response")
-            pdf_submit.click(
-                fn=process_pdf,
-                inputs=[pdf_input, pdf_page, pdf_prompt, pdf_src_lang, pdf_tgt_lang],
-                outputs=pdf_output
             )
 
         # Resume Translation Tab

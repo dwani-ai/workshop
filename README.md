@@ -139,5 +139,6 @@ docker push dwani/workshop:latest
 
 docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url> dwani/workshop:latest
 
+docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL dwani/workshop:latest
 
 -->
