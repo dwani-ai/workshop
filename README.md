@@ -91,9 +91,13 @@ print(result)
   - ```bash
     pip install -r requirements.txt
     ```
+  4. **Run the Program**:
+  - ```bash
+    python workshop_demo.py
+    ```
 
 - To Run the program
-  - DWANI_API_BASE_URL and DWANI_API_KEY environement variable has to be set
+  - DWANI_API_BASE_URL and DWANI_API_KEY environment variables has to be set
     - export DWANI_API_BASE_URL=http://example.com
     - export DWANI_API_KEY='your_api_key_here'
 
@@ -112,17 +116,17 @@ print(result)
 | PDF Query                 | `python intro/pdf_query.py`              | [PDF Chat UX](https://docs-demo.dwani.ai)    |[https://github.com/dwani-ai/docs-indic-server](https://github.com/dwani-ai/docs-indic-server)|
 
 
-## Video Tutorials
-
 <!-- 
+
+## Video Tutorials
 
 - dwani - How to use - dwani AI - Workshop:  20th March, 2025
 [![Watch the video](https://img.youtube.com/vi/RLIhG1bt8gw/hqdefault.jpg)](https://youtu.be/f5JkJLQJFGA)
 
--->
 - dwani - Intoduction to Project
 [![Watch the video](https://img.youtube.com/vi/kqZZZjbeNVk/hqdefault.jpg)](https://youtu.be/kqZZZjbeNVk)
 
+-->
 
 
 ## Architecture
