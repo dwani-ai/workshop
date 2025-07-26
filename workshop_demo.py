@@ -27,13 +27,20 @@ if not dwani.api_key or not dwani.api_base:
     raise ValueError("Please set DWANI_API_KEY and DWANI_API_BASE_URL environment variables.")
 
 # Shared language options
-CHAT_IMAGE_LANGUAGES = ["english", "kannada", "hindi"]
+CHAT_IMAGE_LANGUAGES = ["kannada",  "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+    "marathi", "tamil", "gujarati", "telugu",   "odia"]
+
+ASR_LANGUAGES = ["kannada",  "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+    "marathi", "tamil", "gujarati", "telugu",   "odia"]
+
+
 TRANSLATION_LANGUAGES = [
-    "Assamese", "Punjabi", "Bengali", "Malayalam", "English",
-    "Marathi", "Tamil", "Gujarati", "Telugu", "Hindi", "Kannada", "Odia"
+    "assamese", "punjabi", "bengali", "malayalam", "english",
+    "marathi", "tamil", "gujarati", "telugu", "hindi", "kannada", "odia"
 ]
-ASR_LANGUAGES = ["malayalam", "tamil", "telugu", "hindi", "kannada"]
-TTS_LANGUAGES = ["kannada", "english", "telugu", "hindi", "german"]
+TTS_LANGUAGES = ["kannada",  "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+    "marathi", "tamil", "gujarati", "telugu",   "odia"]
+
 
 # --- Chat Module ---
 def chat_api(prompt, language, tgt_language):
@@ -288,8 +295,8 @@ with gr.Blocks(title="dwani.ai API Suite") as demo:
                         lines=3,
                         value="Hi"
                     )
-                    trans_src_lang = gr.Dropdown(label="Source Language", choices=TRANSLATION_LANGUAGES, value="English")
-                    trans_tgt_lang = gr.Dropdown(label="Target Language", choices=TRANSLATION_LANGUAGES, value="Kannada")
+                    trans_src_lang = gr.Dropdown(label="Source Language", choices=TRANSLATION_LANGUAGES, value="english")
+                    trans_tgt_lang = gr.Dropdown(label="Target Language", choices=TRANSLATION_LANGUAGES, value="kannada")
                     trans_submit = gr.Button("Translate")
                 with gr.Column():
                     trans_output = gr.JSON(label="Translation Response")
@@ -337,7 +344,7 @@ with gr.Blocks(title="dwani.ai API Suite") as demo:
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=80)
+        demo.launch(server_name="0.0.0.0", server_port=7860)
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")
