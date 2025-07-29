@@ -27,13 +27,20 @@ if not dwani.api_key or not dwani.api_base:
     raise ValueError("Please set DWANI_API_KEY and DWANI_API_BASE_URL environment variables.")
 
 # Shared language options
-CHAT_IMAGE_LANGUAGES = ["english", "kannada", "hindi"]
+CHAT_IMAGE_LANGUAGES = ["kannada",  "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+    "marathi", "tamil", "gujarati", "telugu",   "odia"]
+
+ASR_LANGUAGES = ["kannada",  "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+    "marathi", "tamil", "gujarati", "telugu",   "odia"]
+
+
 TRANSLATION_LANGUAGES = [
-    "Assamese", "Punjabi", "Bengali", "Malayalam", "English",
-    "Marathi", "Tamil", "Gujarati", "Telugu", "Hindi", "Kannada", "Odia"
+    "assamese", "punjabi", "bengali", "malayalam", "english",
+    "marathi", "tamil", "gujarati", "telugu", "hindi", "kannada", "odia"
 ]
-ASR_LANGUAGES = ["malayalam", "tamil", "telugu", "hindi", "kannada"]
-TTS_LANGUAGES = ["kannada", "english", "telugu", "hindi", "german"]
+TTS_LANGUAGES = ["kannada",  "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+    "marathi", "tamil", "gujarati", "telugu",   "odia"]
+
 
 # --- Chat Module ---
 def chat_api(prompt, language, tgt_language):
@@ -75,16 +82,11 @@ def transcribe_api(audio_file, language):
 
 # --- Translation Module ---
 def translate_api(sentences, src_lang, tgt_lang):
-    if isinstance(sentences, str):
-        sentences = [s.strip() for s in sentences.split(",") if s.strip()]
-    elif isinstance(sentences, list):
-        sentences = [s.strip() for s in sentences if isinstance(s, str) and s.strip()]
-    else:
-        return {"error": "Invalid input: sentences must be a string or list of strings"}
     if not sentences:
         return {"error": "Please provide at least one non-empty sentence"}
     try:
         result = dwani.Translate.run_translate(sentences=sentences, src_lang=src_lang, tgt_lang=tgt_lang)
+        
         return result
     except dwani.exceptions.DhwaniAPIError as e:
         return {"error": f"API error: {str(e)}"}
@@ -108,7 +110,7 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
     file_path = pdf_file.name if hasattr(pdf_file, 'name') else pdf_file
     try:
         result = dwani.Documents.query_all(
-            file_path, model="gemma3", tgt_lang="kan_Knda", prompt=prompt
+            file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
         )
         return {
             "Original Text": result.get("original_text", "N/A"),
@@ -288,8 +290,8 @@ with gr.Blocks(title="dwani.ai API Suite") as demo:
                         lines=3,
                         value="Hi"
                     )
-                    trans_src_lang = gr.Dropdown(label="Source Language", choices=TRANSLATION_LANGUAGES, value="English")
-                    trans_tgt_lang = gr.Dropdown(label="Target Language", choices=TRANSLATION_LANGUAGES, value="Kannada")
+                    trans_src_lang = gr.Dropdown(label="Source Language", choices=TRANSLATION_LANGUAGES, value="english")
+                    trans_tgt_lang = gr.Dropdown(label="Target Language", choices=TRANSLATION_LANGUAGES, value="kannada")
                     trans_submit = gr.Button("Translate")
                 with gr.Column():
                     trans_output = gr.JSON(label="Translation Response")
