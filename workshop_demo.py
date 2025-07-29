@@ -110,7 +110,7 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
     file_path = pdf_file.name if hasattr(pdf_file, 'name') else pdf_file
     try:
         result = dwani.Documents.query_all(
-            file_path, model="gemma3", tgt_lang="kan_Knda", prompt=prompt
+            file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
         )
         return {
             "Original Text": result.get("original_text", "N/A"),
