@@ -343,78 +343,6 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
     gr.Markdown("A comprehensive interface for dwani.ai APIs: Chat, Image Query, Transcription, Translation, PDF Processing, Resume Translation, Text-to-Speech, and Chatbot.")
 
     with gr.Tabs():
-        # Chat Tab
-        with gr.Tab("Chat"):
-            gr.Markdown("Interact with the Chat API")
-            with gr.Row():
-                with gr.Column():
-                    chat_prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt (e.g., 'hi')")
-                    chat_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
-                    chat_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
-                    chat_submit = gr.Button("Submit")
-                with gr.Column():
-                    chat_output = gr.JSON(label="Chat Response")
-            chat_submit.click(
-                fn=chat_api,
-                inputs=[chat_prompt, chat_src_lang, chat_tgt_lang],
-                outputs=chat_output
-            )
-
-        # Image Query Tab
-        with gr.Tab("Image Query"):
-            gr.Markdown("Query images with a prompt")
-            with gr.Row():
-                with gr.Column():
-                    image_input = gr.Image(type="pil", label="Upload Image")
-                    image_prompt = gr.Textbox(label="Prompt", placeholder="e.g., describe the image")
-                    image_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
-                    image_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
-                    image_submit = gr.Button("Query")
-                with gr.Column():
-                    image_output = gr.JSON(label="Image Query Response")
-            image_submit.click(
-                fn=visual_query,
-                inputs=[image_input, image_src_lang, image_tgt_lang, image_prompt],
-                outputs=image_output
-            )
-
-        # Transcription Tab
-        with gr.Tab("Transcription"):
-            gr.Markdown("Transcribe audio files")
-            with gr.Row():
-                with gr.Column():
-                    audio_input = gr.Audio(label="Audio File", type="filepath", sources=["upload"])
-                    asr_language = gr.Dropdown(label="Language", choices=ASR_LANGUAGES, value="kannada")
-                    asr_submit = gr.Button("Transcribe")
-                with gr.Column():
-                    asr_output = gr.JSON(label="Transcription Response")
-            asr_submit.click(
-                fn=transcribe_api,
-                inputs=[audio_input, asr_language],
-                outputs=asr_output
-            )
-
-        # Translation Tab
-        with gr.Tab("Translation"):
-            gr.Markdown("Translate sentences between languages")
-            with gr.Row():
-                with gr.Column():
-                    trans_sentences = gr.Textbox(
-                        label="Sentences",
-                        placeholder="Enter sentences (e.g., Hello, Good morning)",
-                        lines=3,
-                        value="Hi"
-                    )
-                    trans_src_lang = gr.Dropdown(label="Source Language", choices=TRANSLATION_LANGUAGES, value="english")
-                    trans_tgt_lang = gr.Dropdown(label="Target Language", choices=TRANSLATION_LANGUAGES, value="kannada")
-                    trans_submit = gr.Button("Translate")
-                with gr.Column():
-                    trans_output = gr.JSON(label="Translation Response")
-            trans_submit.click(
-                fn=translate_api,
-                inputs=[trans_sentences, trans_src_lang, trans_tgt_lang],
-                outputs=trans_output
-            )
 
         # PDF Query Tab
         with gr.Tab("PDF Query"):
@@ -440,42 +368,8 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=pdf_output
             )
 
-        # Resume Translation Tab
-        with gr.Tab("Resume Translation"):
-            gr.Markdown("Upload a resume PDF to extract and translate to Kannada")
-            with gr.Row():
-                with gr.Column():
-                    resume_input = gr.File(label="Upload Resume", file_types=[".pdf"])
-                    resume_submit = gr.Button("Process")
-                with gr.Column():
-                    resume_output = gr.File(label="Download Translated Resume (.txt)")
-            resume_submit.click(
-                fn=process_pdf_resume,
-                inputs=[resume_input],
-                outputs=resume_output
-            )
-
-        # Text-to-Speech Tab
-        with gr.Tab("Text to Speech"):
-            gr.Markdown("Convert text to speech")
-            with gr.Row():
-                with gr.Column():
-                    tts_text = gr.Textbox(
-                        label="Text",
-                        placeholder="Enter text to convert to speech",
-                        value="ಕರ್ನಾಟಕದ ರಾಜಧಾನಿ ಬೆಂಗಳೂರು."
-                    )
-                    tts_language = gr.Dropdown(label="Language", choices=TTS_LANGUAGES, value="kannada")
-                    tts_submit = gr.Button("Generate Speech")
-                with gr.Column():
-                    tts_output = gr.Audio(label="Generated Speech", type="filepath", interactive=False)
-            tts_submit.click(
-                fn=text_to_speech,
-                inputs=[tts_text, tts_language],
-                outputs=tts_output
-            )
-
-        # Chatbot Tab (Integrated from File 2)
+        
+                # Chatbot Tab (Integrated from File 2)
         with gr.Tab("Chatbot"):
             state = gr.State({
                 "conversation_contexts": {},
@@ -535,6 +429,117 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 inputs=[state],
                 outputs=[chatbot, state]
             )
+
+
+        # Image Query Tab
+        with gr.Tab("Image Query"):
+            gr.Markdown("Query images with a prompt")
+            with gr.Row():
+                with gr.Column():
+                    image_input = gr.Image(type="pil", label="Upload Image")
+                    image_prompt = gr.Textbox(label="Prompt", placeholder="e.g., describe the image")
+                    image_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
+                    image_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
+                    image_submit = gr.Button("Query")
+                with gr.Column():
+                    image_output = gr.JSON(label="Image Query Response")
+            image_submit.click(
+                fn=visual_query,
+                inputs=[image_input, image_src_lang, image_tgt_lang, image_prompt],
+                outputs=image_output
+            )
+
+        # Transcription Tab
+        with gr.Tab("Transcription"):
+            gr.Markdown("Transcribe audio files")
+            with gr.Row():
+                with gr.Column():
+                    audio_input = gr.Audio(label="Audio File", type="filepath", sources=["upload"])
+                    asr_language = gr.Dropdown(label="Language", choices=ASR_LANGUAGES, value="kannada")
+                    asr_submit = gr.Button("Transcribe")
+                with gr.Column():
+                    asr_output = gr.JSON(label="Transcription Response")
+            asr_submit.click(
+                fn=transcribe_api,
+                inputs=[audio_input, asr_language],
+                outputs=asr_output
+            )
+
+        # Translation Tab
+        with gr.Tab("Translation"):
+            gr.Markdown("Translate sentences between languages")
+            with gr.Row():
+                with gr.Column():
+                    trans_sentences = gr.Textbox(
+                        label="Sentences",
+                        placeholder="Enter sentences (e.g., Hello, Good morning)",
+                        lines=3,
+                        value="Hi"
+                    )
+                    trans_src_lang = gr.Dropdown(label="Source Language", choices=TRANSLATION_LANGUAGES, value="english")
+                    trans_tgt_lang = gr.Dropdown(label="Target Language", choices=TRANSLATION_LANGUAGES, value="kannada")
+                    trans_submit = gr.Button("Translate")
+                with gr.Column():
+                    trans_output = gr.JSON(label="Translation Response")
+            trans_submit.click(
+                fn=translate_api,
+                inputs=[trans_sentences, trans_src_lang, trans_tgt_lang],
+                outputs=trans_output
+            )
+
+        # Chat Tab
+        with gr.Tab("Chat"):
+            gr.Markdown("Interact with the Chat API")
+            with gr.Row():
+                with gr.Column():
+                    chat_prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt (e.g., 'hi')")
+                    chat_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
+                    chat_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
+                    chat_submit = gr.Button("Submit")
+                with gr.Column():
+                    chat_output = gr.JSON(label="Chat Response")
+            chat_submit.click(
+                fn=chat_api,
+                inputs=[chat_prompt, chat_src_lang, chat_tgt_lang],
+                outputs=chat_output
+            )
+
+
+        # Resume Translation Tab
+        with gr.Tab("Resume Translation"):
+            gr.Markdown("Upload a resume PDF to extract and translate to Kannada")
+            with gr.Row():
+                with gr.Column():
+                    resume_input = gr.File(label="Upload Resume", file_types=[".pdf"])
+                    resume_submit = gr.Button("Process")
+                with gr.Column():
+                    resume_output = gr.File(label="Download Translated Resume (.txt)")
+            resume_submit.click(
+                fn=process_pdf_resume,
+                inputs=[resume_input],
+                outputs=resume_output
+            )
+
+        # Text-to-Speech Tab
+        with gr.Tab("Text to Speech"):
+            gr.Markdown("Convert text to speech")
+            with gr.Row():
+                with gr.Column():
+                    tts_text = gr.Textbox(
+                        label="Text",
+                        placeholder="Enter text to convert to speech",
+                        value="ಕರ್ನಾಟಕದ ರಾಜಧಾನಿ ಬೆಂಗಳೂರು."
+                    )
+                    tts_language = gr.Dropdown(label="Language", choices=TTS_LANGUAGES, value="kannada")
+                    tts_submit = gr.Button("Generate Speech")
+                with gr.Column():
+                    tts_output = gr.Audio(label="Generated Speech", type="filepath", interactive=False)
+            tts_submit.click(
+                fn=text_to_speech,
+                inputs=[tts_text, tts_language],
+                outputs=tts_output
+            )
+
 
 # Launch the interface
 if __name__ == "__main__":
