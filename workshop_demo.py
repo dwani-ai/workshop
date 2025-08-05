@@ -66,6 +66,23 @@ def visual_query(image, src_lang, tgt_lang, prompt):
     finally:
         os.unlink(temp_file_path)
 
+# --- OCR Module ---
+def ocr_image(image):
+    if not image:
+        return {"error": "Please upload an image"}
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+        image.save(temp_file.name, format="PNG")
+        temp_file_path = temp_file.name
+    try:
+        result = dwani.Vision.ocr_image(
+            file_path=temp_file_path,
+        )
+        return result
+    except Exception as e:
+        return {"error": f"Vision API error: {str(e)}"}
+    finally:
+        os.unlink(temp_file_path)
+
 # --- Transcription Module ---
 def transcribe_api(audio_file, language):
     if not audio_file:
@@ -446,6 +463,21 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
             image_submit.click(
                 fn=visual_query,
                 inputs=[image_input, image_src_lang, image_tgt_lang, image_prompt],
+                outputs=image_output
+            )
+
+        # Image Query Tab
+        with gr.Tab("OCR Image"):
+            gr.Markdown("Ocr for Images")
+            with gr.Row():
+                with gr.Column():
+                    image_input = gr.Image(type="pil", label="Upload Image")
+                    image_submit = gr.Button("Query")
+                with gr.Column():
+                    image_output = gr.JSON(label="OCR Response")
+            image_submit.click(
+                fn=ocr_image,
+                inputs=[image_input],
                 outputs=image_output
             )
 
