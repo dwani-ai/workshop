@@ -14,7 +14,7 @@ RUN apk add --no-cache \
     curl \
     libjpeg-turbo-dev \
     zlib-dev \
-    libpng-dev
+    libpng-dev git
 
 # Install Python dependencies
 COPY requirements.txt .
