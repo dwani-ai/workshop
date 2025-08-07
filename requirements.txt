@@ -1,2 +1,2 @@
 gradio
-dwani
+dwani @ git+https://github.com/dwani-ai/dwani-python-sdk.git@document-sppedup-v2
