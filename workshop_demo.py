@@ -219,7 +219,7 @@ client = OpenAI(api_key=api_key, base_url=base_url)
 # Configuration for Chatbot
 DEFAULT_SYS_PROMPT = "You are a helpful and harmless assistant. Respond concisely but meaningfully to short inputs, and provide detailed answers when appropriate."
 DEFAULT_MODEL = "gemma3"
-MODEL_OPTIONS = [{"label": "Gemma3", "value": "gemma3"}]
+MODEL_OPTIONS = [{"label": "Gemma3", "value": "gemma3"}, {"label": "gpt-oss", "value": "gpt-oss"} ]
 MODEL_OPTIONS_MAP = {model["value"]: model for model in MODEL_OPTIONS}
 DEFAULT_SETTINGS = {"model": DEFAULT_MODEL, "sys_prompt": DEFAULT_SYS_PROMPT}
 
@@ -576,7 +576,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=80)
+        demo.launch(server_name="0.0.0.0", server_port=8000)
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")
