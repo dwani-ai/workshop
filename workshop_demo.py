@@ -212,14 +212,14 @@ def text_to_speech(text, language):
 
 # --- Chatbot from File 2 ---
 # Initialize OpenAI client for Chatbot
-base_url = os.getenv('VLLM_IP', 'http://localhost:8000/v1')
+gemma_base_url = os.getenv('GEMMA_VLLM_IP', 'http://localhost:9000/v1')
 api_key = os.getenv('OPENAI_API_KEY', 'your-api-key')
-client = OpenAI(api_key=api_key, base_url=base_url)
+client = OpenAI(api_key=api_key, base_url=gemma_base_url)
 
 # Configuration for Chatbot
 DEFAULT_SYS_PROMPT = "You are a helpful and harmless assistant. Respond concisely but meaningfully to short inputs, and provide detailed answers when appropriate."
 DEFAULT_MODEL = "gemma3"
-MODEL_OPTIONS = [{"label": "Gemma3", "value": "gemma3"}, {"label": "gpt-oss", "value": "gpt-oss"} ]
+MODEL_OPTIONS = [{"label": "Gemma3", "value": "gemma3"}]
 MODEL_OPTIONS_MAP = {model["value"]: model for model in MODEL_OPTIONS}
 DEFAULT_SETTINGS = {"model": DEFAULT_MODEL, "sys_prompt": DEFAULT_SYS_PROMPT}
 
@@ -385,7 +385,63 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=pdf_output
             )
 
-        
+                with gr.Tab("gpt-oss"):
+            gr.Markdown("gpt-oss")
+            import gradio as gr
+            import requests
+            import re
+
+            API_URL = "http://localhost:9500/v1/chat/completions"
+
+            def extract_values(text):
+                pattern = r'<\|channel\|>(.*?)<\|message\|>(.*?)(?=<\|start\|>|<\|channel\|>|$)'
+                matches = re.findall(pattern, text, re.DOTALL)
+                result = [{'channel': m[0], 'message': m[1].strip()} for m in matches]
+                return result
+
+            def get_final_message(text):
+                extracted = extract_values(text)
+                for item in extracted:
+                    if item['channel'] == 'final':
+                        return item['message']
+                return None  # Return None if no "final" message found
+
+            def ask_gpt(user_message, history):
+                # Compose conversation history to OpenAI format
+                messages = [{"role": "system", "content": "hello"}]  # Optional system prompt
+
+                for user, assistant in history:
+                    messages.append({"role": "user", "content": user})
+                    if assistant:
+                        messages.append({"role": "assistant", "content": assistant})
+
+                # Add the new user message
+                messages.append({"role": "user", "content": user_message})
+
+                data = {
+                    "messages": messages,
+                    "temperature": 1.0,
+                    "max_tokens": 1000,
+                    "stream": False,
+                    "model": "openai/gpt-oss-120b"
+                }
+
+                try:
+                    resp = requests.post(API_URL, json=data, timeout=60)
+                    resp.raise_for_status()
+                    result = resp.json()
+
+                    # The raw content might be with special tokens, so extract final message
+                    raw_answer = result["choices"][0]["message"]["content"]
+                    final_message = get_final_message(raw_answer)
+                    answer = final_message if final_message is not None else raw_answer
+                except Exception as e:
+                    answer = f"Error: {e}"
+                return answer
+
+
+            gr.ChatInterface(ask_gpt, title="gpt-oss")
+
                 # Chatbot Tab (Integrated from File 2)
         with gr.Tab("Chatbot"):
             state = gr.State({

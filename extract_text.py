@@ -52,6 +52,6 @@ def ask_gpt(user_message, history):
 
 
 with gr.Blocks() as demo:
-    gr.ChatInterface(ask_gpt, title="Chat with gpt-oss-120b /v1/chat/completions")
+    gr.ChatInterface(ask_gpt, title="gpt-oss")
 
 demo.launch()
