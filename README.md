@@ -142,12 +142,12 @@ nohup python src/server/main.py --port 7860 > server.log 2>&1 &
 docker build -t dwani/workshop:latest -f Dockerfile .
 docker push dwani/workshop:latest
 
-docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url> dwani/workshop:latest
+docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url>  --env GPT_OSS_API_URL=<gpt_url> --env GEMMA_VLLM_IP=<gemma_ip> dwani/workshop:latest
 
-docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL dwani/workshop:latest
+docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL --env GPT_OSS_API_URL=$GPT_OSS_API_URL --env GEMMA_VLLM_IP=$GEMMA_VLLM_IP  dwani/workshop:latest
 
 
-pip install git+https://github.com/dwani-ai/dwani-python-sdk.git@one-more-speedup
+pip install git+https://github.com/dwani-ai/dwani-python-sdk.git@document-sppedup-v2
 -->
 
 - Project is MIT Licensed
