@@ -43,7 +43,7 @@ source_language = "kannada"
 target_language = "kannada"
 
 try:
-    respone = dwani.Chat.create(prompt, source_language, target_language)
+    response = dwani.Chat.create(prompt, source_language, target_language)
     result = response["response"]
     print(result)
 except Exception as e:
