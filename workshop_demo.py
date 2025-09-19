@@ -442,12 +442,12 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=pdf_output
             )
 
-        with gr.Tab("gpt-oss"):
+        with gr.Tab("gpt-oss",visible=False):
             gr.Markdown("gpt-oss")
             gr.ChatInterface(ask_gpt, title="gpt-oss")
 
                 # Chatbot Tab (Integrated from File 2)
-        with gr.Tab("Chatbot"):
+        with gr.Tab("Chatbot",visible=False):
             state = gr.State({
                 "conversation_contexts": {},
                 "conversations": [],
@@ -580,7 +580,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
             )
 
         # Chat Tab
-        with gr.Tab("Chat"):
+        with gr.Tab("Chat",visible=False):
             gr.Markdown("Interact with the Chat API")
             with gr.Row():
                 with gr.Column():
@@ -598,7 +598,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 
 
         # Resume Translation Tab
-        with gr.Tab("Resume Translation"):
+        with gr.Tab("Resume Translation",visible=False):
             gr.Markdown("Upload a resume PDF to extract and translate to Kannada")
             with gr.Row():
                 with gr.Column():
@@ -636,7 +636,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=80)
+        demo.launch(server_name="0.0.0.0", server_port=8080)
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")
