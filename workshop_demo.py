@@ -419,7 +419,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
     with gr.Tabs():
 
         # PDF Query Tab
-        with gr.Tab("PDF Query"):
+        with gr.Tab("PDF Query", visible=False):
             gr.Markdown("Query PDF files with a custom prompt")
             with gr.Row():
                 with gr.Column():
@@ -558,7 +558,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
             )
 
         # Translation Tab
-        with gr.Tab("Translation"):
+        with gr.Tab("Translation", visible=False):
             gr.Markdown("Translate sentences between languages")
             with gr.Row():
                 with gr.Column():
@@ -636,7 +636,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=8080)
+        demo.launch(server_name="0.0.0.0", server_port=80)
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")
