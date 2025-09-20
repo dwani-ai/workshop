@@ -543,11 +543,22 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 
         # Transcription Tab
         with gr.Tab("Transcription"):
-            gr.Markdown("Transcribe audio files")
+            gr.Markdown("Transcribe audio from a file or microphone recording")
             with gr.Row():
                 with gr.Column():
-                    audio_input = gr.Audio(label="Audio File", type="filepath", sources=["upload"])
-                    asr_language = gr.Dropdown(label="Language", choices=ASR_LANGUAGES, value="kannada")
+                    audio_input = gr.Audio(
+                        label="Record or Upload Audio",
+                        type="filepath",
+                        sources=["upload", "microphone"],  # Allow both upload and microphone
+                        waveform_options=gr.WaveformOptions(
+                            show_recording_waveform=True
+                        )
+                    )
+                    asr_language = gr.Dropdown(
+                        label="Language",
+                        choices=ASR_LANGUAGES,
+                        value="kannada"
+                    )
                     asr_submit = gr.Button("Transcribe")
                 with gr.Column():
                     asr_output = gr.JSON(label="Transcription Response")
