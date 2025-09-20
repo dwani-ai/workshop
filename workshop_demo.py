@@ -419,7 +419,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
     with gr.Tabs():
 
         # PDF Query Tab
-        with gr.Tab("PDF Query", visible=False):
+        with gr.Tab("PDF Query"):
             gr.Markdown("Query PDF files with a custom prompt")
             with gr.Row():
                 with gr.Column():
