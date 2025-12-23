@@ -436,6 +436,7 @@ with gr.Blocks() as demo:  # Removed css and fill_width from constructor
             gr.Markdown("gpt-oss")
             gr.ChatInterface(ask_gpt, title="gpt-oss")
 
+        """
         # Chatbot Tab
         with gr.Tab("Chatbot", visible=False):
             state = gr.State({
@@ -496,7 +497,7 @@ with gr.Blocks() as demo:  # Removed css and fill_width from constructor
                 inputs=[state],
                 outputs=[chatbot, state]
             )
-
+        """
         # Image Query Tab
         with gr.Tab("Image Query"):
             gr.Markdown("Query images with a prompt")
