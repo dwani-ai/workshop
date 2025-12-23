@@ -121,9 +121,12 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
         return {"error": "Invalid source or target language selection"}
     file_path = pdf_file.name if hasattr(pdf_file, 'name') else pdf_file
     try:
-        result = dwani.Documents.query_all(
-            file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
+        result = dwani.Documents.query_page(
+            file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt, page_number=1
         )
+        #result = dwani.Documents.query_all(
+        #    file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
+        #)
         return {
             "Original Text": result.get("original_text", "N/A"),
             "Response": result.get("query_answer", "N/A"),
@@ -569,7 +572,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
             )
 
         # Translation Tab
-        with gr.Tab("Translation", visible=False):
+        with gr.Tab("Translation"):
             gr.Markdown("Translate sentences between languages")
             with gr.Row():
                 with gr.Column():
