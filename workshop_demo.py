@@ -121,9 +121,12 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
         return {"error": "Invalid source or target language selection"}
     file_path = pdf_file.name if hasattr(pdf_file, 'name') else pdf_file
     try:
-        result = dwani.Documents.query_all(
-            file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
+        result = dwani.Documents.query_page(
+            file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt, page_number=1
         )
+        #result = dwani.Documents.query_all(
+        #    file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
+        #)
         return {
             "Original Text": result.get("original_text", "N/A"),
             "Response": result.get("query_answer", "N/A"),
@@ -442,12 +445,12 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=pdf_output
             )
 
-        with gr.Tab("gpt-oss"):
+        with gr.Tab("gpt-oss",visible=False):
             gr.Markdown("gpt-oss")
             gr.ChatInterface(ask_gpt, title="gpt-oss")
 
                 # Chatbot Tab (Integrated from File 2)
-        with gr.Tab("Chatbot"):
+        with gr.Tab("Chatbot",visible=False):
             state = gr.State({
                 "conversation_contexts": {},
                 "conversations": [],
@@ -543,11 +546,22 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 
         # Transcription Tab
         with gr.Tab("Transcription"):
-            gr.Markdown("Transcribe audio files")
+            gr.Markdown("Transcribe audio from a file or microphone recording")
             with gr.Row():
                 with gr.Column():
-                    audio_input = gr.Audio(label="Audio File", type="filepath", sources=["upload"])
-                    asr_language = gr.Dropdown(label="Language", choices=ASR_LANGUAGES, value="kannada")
+                    audio_input = gr.Audio(
+                        label="Record or Upload Audio",
+                        type="filepath",
+                        sources=["upload", "microphone"],  # Allow both upload and microphone
+                        waveform_options=gr.WaveformOptions(
+                            show_recording_waveform=True
+                        )
+                    )
+                    asr_language = gr.Dropdown(
+                        label="Language",
+                        choices=ASR_LANGUAGES,
+                        value="kannada"
+                    )
                     asr_submit = gr.Button("Transcribe")
                 with gr.Column():
                     asr_output = gr.JSON(label="Transcription Response")
@@ -580,7 +594,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
             )
 
         # Chat Tab
-        with gr.Tab("Chat"):
+        with gr.Tab("Chat",visible=False):
             gr.Markdown("Interact with the Chat API")
             with gr.Row():
                 with gr.Column():
@@ -598,7 +612,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
 
 
         # Resume Translation Tab
-        with gr.Tab("Resume Translation"):
+        with gr.Tab("Resume Translation",visible=False):
             gr.Markdown("Upload a resume PDF to extract and translate to Kannada")
             with gr.Row():
                 with gr.Column():
