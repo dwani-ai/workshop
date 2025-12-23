@@ -10,6 +10,7 @@ import json
 import time
 import uuid
 from openai import OpenAI
+import re
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -124,9 +125,6 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
         result = dwani.Documents.query_page(
             file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt, page_number=1
         )
-        #result = dwani.Documents.query_all(
-        #    file_path, model="gemma3", tgt_lang=tgt_lang, prompt=prompt
-        #)
         return {
             "Original Text": result.get("original_text", "N/A"),
             "Response": result.get("query_answer", "N/A"),
@@ -342,7 +340,52 @@ class Gradio_Events:
             return gr.update(value=[]), gr.update(value=state_value)
         return gr.skip(), gr.skip()
 
-# --- Gradio Interface ---
+# --- gpt-oss Chat Interface ---
+GPT_OSS_API_URL = os.getenv('GPT_OSS_API_URL', "http://localhost:9500/v1/chat/completions")
+
+def extract_values(text):
+    pattern = r'<\|channel\|>(.*?)<\|message\|>(.*?)(?=<\|start\|>|<\|channel\|>|$)'
+    matches = re.findall(pattern, text, re.DOTALL)
+    result = [{'channel': m[0], 'message': m[1].strip()} for m in matches]
+    return result
+
+def get_final_message(text):
+    extracted = extract_values(text)
+    for item in extracted:
+        if item['channel'] == 'final':
+            return item['message']
+    return None
+
+def ask_gpt(user_message, history):
+    messages = [{"role": "system", "content": "You are a helpful assistant."}]
+
+    for user, assistant in history:
+        messages.append({"role": "user", "content": user})
+        if assistant:
+            messages.append({"role": "assistant", "content": assistant})
+
+    messages.append({"role": "user", "content": user_message})
+
+    data = {
+        "messages": messages,
+        "temperature": 1.0,
+        "max_tokens": 1000,
+        "stream": False,
+        "model": "openai/gpt-oss-120b"
+    }
+
+    try:
+        resp = requests.post(GPT_OSS_API_URL, json=data, timeout=60)
+        resp.raise_for_status()
+        result = resp.json()
+        raw_answer = result["choices"][0]["message"]["content"]
+        final_message = get_final_message(raw_answer)
+        answer = final_message if final_message is not None else raw_answer
+    except Exception as e:
+        answer = f"Error: {e}"
+    return answer
+
+# --- Custom CSS ---
 css = """
 .gradio-container {
     max-width: 1200px;
@@ -358,64 +401,8 @@ css = """
 }
 """
 
-import gradio as gr
-import requests
-import re
-
-
-
-GPT_OSS_API_URL = os.getenv('GPT_OSS_API_URL', "http://localhost:9500/v1/chat/completions")
-
-def extract_values(text):
-    pattern = r'<\|channel\|>(.*?)<\|message\|>(.*?)(?=<\|start\|>|<\|channel\|>|$)'
-    matches = re.findall(pattern, text, re.DOTALL)
-    result = [{'channel': m[0], 'message': m[1].strip()} for m in matches]
-    return result
-
-def get_final_message(text):
-    extracted = extract_values(text)
-    for item in extracted:
-        if item['channel'] == 'final':
-            return item['message']
-    return None  # Return None if no "final" message found
-
-def ask_gpt(user_message, history):
-    # Compose conversation history to OpenAI format
-    messages = [{"role": "system", "content": "hello"}]  # Optional system prompt
-
-    for user, assistant in history:
-        messages.append({"role": "user", "content": user})
-        if assistant:
-            messages.append({"role": "assistant", "content": assistant})
-
-    # Add the new user message
-    messages.append({"role": "user", "content": user_message})
-
-    data = {
-        "messages": messages,
-        "temperature": 1.0,
-        "max_tokens": 1000,
-        "stream": False,
-        "model": "openai/gpt-oss-120b"
-    }
-
-    try:
-        resp = requests.post(GPT_OSS_API_URL, json=data, timeout=60)
-        resp.raise_for_status()
-        result = resp.json()
-
-        # The raw content might be with special tokens, so extract final message
-        raw_answer = result["choices"][0]["message"]["content"]
-        final_message = get_final_message(raw_answer)
-        answer = final_message if final_message is not None else raw_answer
-    except Exception as e:
-        answer = f"Error: {e}"
-    return answer
-
-
-
-
-with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
+# --- Gradio Interface ---
+with gr.Blocks() as demo:  # Removed css and fill_width from constructor
     gr.Markdown("# dwani.ai API Suite")
     gr.Markdown("A comprehensive interface for dwani.ai APIs: Chat, Image Query, Transcription, Translation, PDF Processing, Resume Translation, Text-to-Speech, and Chatbot.")
 
@@ -445,12 +432,12 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=pdf_output
             )
 
-        with gr.Tab("gpt-oss",visible=False):
+        with gr.Tab("gpt-oss", visible=False):
             gr.Markdown("gpt-oss")
             gr.ChatInterface(ask_gpt, title="gpt-oss")
 
-                # Chatbot Tab (Integrated from File 2)
-        with gr.Tab("Chatbot",visible=False):
+        # Chatbot Tab
+        with gr.Tab("Chatbot", visible=False):
             state = gr.State({
                 "conversation_contexts": {},
                 "conversations": [],
@@ -470,7 +457,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                     delete_conversation_btn = gr.Button("Delete Selected Conversation")
                 with gr.Column(scale=3):
                     gr.Markdown("## Chatbot")
-                    chatbot = gr.Chatbot(elem_id="chatbot", show_copy_button=True, type="messages")
+                    chatbot = gr.Chatbot(elem_id="chatbot", buttons=["copy"], type="messages")  # Fixed: use buttons=["copy"]
                     user_input = gr.Textbox(placeholder="Type your message...", label="Message")
                     with gr.Row():
                         model_select = gr.Dropdown(choices=list(MODEL_OPTIONS_MAP.keys()), value=DEFAULT_SETTINGS["model"], label="Model")
@@ -478,7 +465,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                     with gr.Row():
                         submit_btn = gr.Button("Send", elem_id="submit_btn")
                         clear_btn = gr.Button("Clear Conversation")
-            # Event Handlers for Chatbot
+            # Event Handlers
             submit_btn.click(
                 fn=Gradio_Events.add_message,
                 inputs=[user_input, model_select, sys_prompt, state],
@@ -510,7 +497,6 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=[chatbot, state]
             )
 
-
         # Image Query Tab
         with gr.Tab("Image Query"):
             gr.Markdown("Query images with a prompt")
@@ -529,9 +515,9 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=image_output
             )
 
-        # Image Query Tab
+        # OCR Image Tab
         with gr.Tab("OCR Image"):
-            gr.Markdown("Ocr for Images")
+            gr.Markdown("OCR for Images")
             with gr.Row():
                 with gr.Column():
                     image_input = gr.Image(type="pil", label="Upload Image")
@@ -552,7 +538,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                     audio_input = gr.Audio(
                         label="Record or Upload Audio",
                         type="filepath",
-                        sources=["upload", "microphone"],  # Allow both upload and microphone
+                        sources=["upload", "microphone"],
                         waveform_options=gr.WaveformOptions(
                             show_recording_waveform=True
                         )
@@ -594,7 +580,7 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
             )
 
         # Chat Tab
-        with gr.Tab("Chat",visible=False):
+        with gr.Tab("Chat", visible=False):
             gr.Markdown("Interact with the Chat API")
             with gr.Row():
                 with gr.Column():
@@ -610,9 +596,8 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=chat_output
             )
 
-
         # Resume Translation Tab
-        with gr.Tab("Resume Translation",visible=False):
+        with gr.Tab("Resume Translation", visible=False):
             gr.Markdown("Upload a resume PDF to extract and translate to Kannada")
             with gr.Row():
                 with gr.Column():
@@ -646,11 +631,10 @@ with gr.Blocks(title="dwani.ai API Suite", css=css, fill_width=True) as demo:
                 outputs=tts_output
             )
 
-
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=80)
+        demo.launch(server_name="0.0.0.0", server_port=80, css=css)  # css moved to launch()
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")

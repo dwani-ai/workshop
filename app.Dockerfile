@@ -18,11 +18,11 @@ RUN apk add --no-cache \
     zlib-dev \
     libpng-dev \
     portaudio \
-    py3-pyaudio  # This installs the pre-built PyAudio
+    py3-pyaudio  
 
 # Copy requirements.txt and install other Python deps (skip pyaudio if listed)
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r gradio dwani
+RUN pip install --no-cache-dir --user gradio dwani
 
 # Stage 2: Final stage
 FROM python:3.10-alpine
@@ -37,7 +37,7 @@ RUN apk add --no-cache \
     libjpeg-turbo \
     zlib \
     libpng \
-    portaudio \  # Runtime library required by PyAudio
+    portaudio \  
     && rm -rf /var/cache/apk/*
 
 # Copy Python packages from builder (including py3-pyaudio)
