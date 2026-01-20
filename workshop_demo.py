@@ -30,14 +30,28 @@ if not dwani.api_key or not dwani.api_base:
     raise ValueError("Please set DWANI_API_KEY and DWANI_API_BASE_URL environment variables.")
 
 # Shared language options
-CHAT_IMAGE_LANGUAGES = ["kannada", "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+OLD_CHAT_IMAGE_LANGUAGES = ["kannada", "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
                         "marathi", "tamil", "gujarati", "telugu", "odia"]
-ASR_LANGUAGES = ["kannada", "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+
+
+CHAT_IMAGE_LANGUAGES = ["kannada", "english", "hindi", "german",  "marathi", "tamil", "telugu"]
+
+OLD_ASR_LANGUAGES = ["kannada", "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
                  "marathi", "tamil", "gujarati", "telugu", "odia"]
-TRANSLATION_LANGUAGES = ["assamese", "punjabi", "bengali", "malayalam", "english",
+
+ASR_LANGUAGES = ["kannada", "english", "hindi", "german",  "marathi", "tamil", "telugu"]
+
+
+OLD_TRANSLATION_LANGUAGES = ["assamese", "punjabi", "bengali", "malayalam", "english",
                         "marathi", "tamil", "gujarati", "telugu", "hindi", "kannada", "odia"]
-TTS_LANGUAGES = ["kannada", "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
+
+
+TRANSLATION_LANGUAGES = ["kannada", "english", "hindi", "german",  "marathi", "tamil", "telugu"]
+
+OLD_TTS_LANGUAGES = ["kannada", "english", "hindi", "german", "assamese", "punjabi", "bengali", "malayalam", 
                  "marathi", "tamil", "gujarati", "telugu", "odia"]
+
+TTS_LANGUAGES = ["kannada", "english", "hindi", "german",  "marathi", "tamil", "telugu"]
 
 # --- Chat Module ---
 def chat_api(prompt, language, tgt_language):
