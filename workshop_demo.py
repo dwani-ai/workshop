@@ -649,7 +649,7 @@ with gr.Blocks() as demo:  # Removed css and fill_width from constructor
 # Launch the interface
 if __name__ == "__main__":
     try:
-        demo.launch(server_name="0.0.0.0", server_port=80, css=css)  # css moved to launch()
+        demo.launch(server_name="0.0.0.0", server_port=8000, css=css)  # css moved to launch()
     except Exception as e:
         logger.error(f"Failed to launch Gradio interface: {str(e)}")
         print(f"Failed to launch Gradio interface: {str(e)}")
