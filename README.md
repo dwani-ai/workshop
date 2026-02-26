@@ -135,22 +135,26 @@ print(result)
 |----------|-----------------------------------------------|---------------------------------------------|
 | ![Answer Engine](docs/images/kannada-answer-engine.drawio.png "Engine") | ![Answer Engine Translation](docs/images/kannada-answer-engine-translate.png "Engine") | ![Voice Translation](docs/images/voice-translation.drawio.png "Voice Translation") |
 
-<!-- 
+
+- Docker for Workshop
 
 
-
+- Build Docker 
+```bash
 docker build -t dwani/workshop:latest -f Dockerfile .
+```
+```
+export DWANI_API_BASE_URL=some_url
+export DWANI_API_KEY=some_kel
+```
+
+
+docker run -p 80:8000 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL  dwani/workshop:latest
+
+<!-->
+docker run -p 80:8000 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url>  dwani/workshop:latest
 
 docker push dwani/workshop:latest
-
-export DWANI_API_BASE_URL=
-export DWANI_API_KEY=
-
-
-docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url>  dwani/workshop:latest
-
-docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL  dwani/workshop:latest
-
 
 -->
 
