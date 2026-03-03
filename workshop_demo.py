@@ -132,26 +132,6 @@ def process_pdf(pdf_file, page_number, prompt, src_lang, tgt_lang):
     except Exception as e:
         return {"error": f"PDF API error: {str(e)}"}
 
-# --- Resume Translation Module ---
-def translate_to_kannada(text):
-    if not text or text.strip() == "":
-        return ""
-    try:
-        resp = dwani.Translate.run_translate(
-            sentences=text,
-            src_lang="english",
-            tgt_lang="kannada"
-        )
-        if isinstance(resp, dict):
-            translated = resp.get("translated_text")
-            if translated:
-                return translated.strip()
-            if "translations" in resp and isinstance(resp["translations"], list):
-                return " ".join(t.strip() for t in resp["translations"] if isinstance(t, str))
-            return str(resp).strip()
-        return resp.strip() if isinstance(resp, str) else str(resp).strip()
-    except Exception as e:
-        return f"Translation error: {str(e)}"
 
 def extract_text_from_response(chat_response):
     if isinstance(chat_response, dict):
@@ -177,135 +157,6 @@ def text_to_speech(text, language):
     except Exception as e:
         return None
 
-# --- Chatbot from File 2 ---
-# Initialize OpenAI client for Chatbot
-gemma_base_url = os.getenv('GEMMA_VLLM_IP', 'http://localhost:9000/v1')
-api_key = os.getenv('OPENAI_API_KEY', 'your-api-key')
-client = OpenAI(api_key=api_key, base_url=gemma_base_url)
-
-# Configuration for Chatbot
-DEFAULT_SYS_PROMPT = "You are a helpful and harmless assistant. Respond concisely but meaningfully to short inputs, and provide detailed answers when appropriate."
-DEFAULT_MODEL = "gemma3"
-MODEL_OPTIONS = [{"label": "Gemma3", "value": "gemma3"}]
-MODEL_OPTIONS_MAP = {model["value"]: model for model in MODEL_OPTIONS}
-DEFAULT_SETTINGS = {"model": DEFAULT_MODEL, "sys_prompt": DEFAULT_SYS_PROMPT}
-
-def format_history(history, sys_prompt):
-    messages = [{"role": "system", "content": sys_prompt}] + history
-    return messages
-
-class Gradio_Events:
-    @staticmethod
-    def submit(state_value, user_input, model_value, sys_prompt_value):
-        conversation_id = state_value["conversation_id"]
-        history = state_value["conversation_contexts"][conversation_id]["history"]
-        settings = {"model": model_value, "sys_prompt": sys_prompt_value}
-        state_value["conversation_contexts"][conversation_id]["settings"] = settings
-
-        history.append({"role": "user", "content": user_input})
-        messages = format_history(history, sys_prompt_value)
-
-        try:
-            response = client.chat.completions.create(
-                model=model_value,
-                messages=messages,
-                stream=False
-            )
-            start_time = time.time()
-            answer_content = response.choices[0].message.content
-            history.append({"role": "assistant", "content": f"{answer_content}\n\n*Generated in {time.time() - start_time:.2f}s*"})
-        except Exception as e:
-            history.append({"role": "assistant", "content": f"Error: {str(e)}"})
-
-        return (
-            gr.update(value=history),
-            gr.update(value=state_value),
-            gr.update(interactive=True),
-            gr.update(interactive=True),
-            gr.update(interactive=True),
-            gr.update(choices=[(c["label"], c["key"]) for c in state_value["conversations"]], 
-                     visible=bool(state_value["conversations"]), 
-                     value=state_value["conversation_id"])
-        )
-
-    @staticmethod
-    def add_message(user_input, model_value, sys_prompt_value, state_value):
-        if not user_input.strip():
-            return (
-                gr.skip(),
-                state_value,
-                user_input,
-                gr.skip(),
-                gr.skip(),
-                gr.update(choices=[(c["label"], c["key"]) for c in state_value["conversations"]], 
-                         visible=bool(state_value["conversations"]), 
-                         value=state_value["conversation_id"])
-            )
-
-        if not state_value["conversation_id"]:
-            random_id = str(uuid.uuid4())
-            state_value["conversation_id"] = random_id
-            state_value["conversation_contexts"][random_id] = {
-                "history": [],
-                "settings": {"model": model_value, "sys_prompt": sys_prompt_value}
-            }
-            state_value["conversations"].append({
-                "label": user_input[:30] + "..." if len(user_input) > 30 else user_input,
-                "key": random_id
-            })
-
-        return Gradio_Events.submit(state_value, user_input, model_value, sys_prompt_value)
-
-    @staticmethod
-    def new_chat(state_value):
-        state_value["conversation_id"] = ""
-        return (
-            gr.update(value=[]),
-            gr.update(value=state_value),
-            gr.update(value=DEFAULT_SETTINGS["model"]),
-            gr.update(value=DEFAULT_SETTINGS["sys_prompt"]),
-            gr.update(choices=[], visible=False)
-        )
-
-    @staticmethod
-    def select_conversation(state_value, evt: gr.EventData):
-        conversation_id = evt._data
-        if conversation_id not in state_value["conversation_contexts"]:
-            return gr.skip(), gr.skip(), gr.skip(), gr.skip()
-        state_value["conversation_id"] = conversation_id
-        history = state_value["conversation_contexts"][conversation_id]["history"]
-        settings = state_value["conversation_contexts"][conversation_id]["settings"]
-        return (
-            gr.update(value=history),
-            gr.update(value=state_value),
-            gr.update(value=settings["model"]),
-            gr.update(value=settings["sys_prompt"])
-        )
-
-    @staticmethod
-    def delete_conversation(state_value, evt: gr.EventData):
-        conversation_id = evt._data
-        if conversation_id in state_value["conversation_contexts"]:
-            del state_value["conversation_contexts"][conversation_id]
-            state_value["conversations"] = [c for c in state_value["conversations"] if c["key"] != conversation_id]
-            if state_value["conversation_id"] == conversation_id:
-                state_value["conversation_id"] = ""
-                return (
-                    gr.update(value=[]),
-                    gr.update(value=state_value),
-                    gr.update(choices=[], visible=False)
-                )
-        return gr.skip(), gr.update(value=state_value), gr.update(choices=[(c["label"], c["key"]) for c in state_value["conversations"]], 
-                                                                visible=bool(state_value["conversations"]), 
-                                                                value=state_value["conversation_id"])
-
-    @staticmethod
-    def clear_conversation(state_value):
-        if state_value["conversation_id"]:
-            state_value["conversation_contexts"][state_value["conversation_id"]]["history"] = []
-            return gr.update(value=[]), gr.update(value=state_value)
-        return gr.skip(), gr.skip()
-
 
 # --- Custom CSS ---
 css = """
@@ -330,28 +181,21 @@ with gr.Blocks() as demo:  # Removed css and fill_width from constructor
 
     with gr.Tabs():
 
-        # PDF Query Tab
-        with gr.Tab("PDF Query"):
-            gr.Markdown("Query PDF files with a custom prompt")
+        # Chat Tab
+        with gr.Tab("Chat", visible=True):
+            gr.Markdown("Interact with the Chat API")
             with gr.Row():
                 with gr.Column():
-                    pdf_input = gr.File(label="Upload PDF", file_types=[".pdf"])
-                    pdf_page = gr.Number(label="Page Number", value=1, minimum=1, precision=0)
-                    pdf_prompt = gr.Textbox(
-                        label="Custom Prompt",
-                        placeholder="e.g., List the key points",
-                        value="List the key points",
-                        lines=3
-                    )
-                    pdf_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
-                    pdf_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
-                    pdf_submit = gr.Button("Process")
+                    chat_prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt (e.g., 'hi')")
+                    chat_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
+                    chat_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
+                    chat_submit = gr.Button("Submit")
                 with gr.Column():
-                    pdf_output = gr.JSON(label="PDF Response")
-            pdf_submit.click(
-                fn=process_pdf,
-                inputs=[pdf_input, pdf_page, pdf_prompt, pdf_src_lang, pdf_tgt_lang],
-                outputs=pdf_output
+                    chat_output = gr.JSON(label="Chat Response")
+            chat_submit.click(
+                fn=chat_api,
+                inputs=[chat_prompt, chat_src_lang, chat_tgt_lang],
+                outputs=chat_output
             )
 
         # Image Query Tab
@@ -436,22 +280,6 @@ with gr.Blocks() as demo:  # Removed css and fill_width from constructor
                 outputs=trans_output
             )
 
-        # Chat Tab
-        with gr.Tab("Chat", visible=True):
-            gr.Markdown("Interact with the Chat API")
-            with gr.Row():
-                with gr.Column():
-                    chat_prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt (e.g., 'hi')")
-                    chat_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
-                    chat_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
-                    chat_submit = gr.Button("Submit")
-                with gr.Column():
-                    chat_output = gr.JSON(label="Chat Response")
-            chat_submit.click(
-                fn=chat_api,
-                inputs=[chat_prompt, chat_src_lang, chat_tgt_lang],
-                outputs=chat_output
-            )
 
         # Text-to-Speech Tab
         with gr.Tab("Text to Speech"):
@@ -472,6 +300,31 @@ with gr.Blocks() as demo:  # Removed css and fill_width from constructor
                 inputs=[tts_text, tts_language],
                 outputs=tts_output
             )
+
+        # PDF Query Tab
+        with gr.Tab("PDF Query"):
+            gr.Markdown("Query PDF files with a custom prompt")
+            with gr.Row():
+                with gr.Column():
+                    pdf_input = gr.File(label="Upload PDF", file_types=[".pdf"])
+                    pdf_page = gr.Number(label="Page Number", value=1, minimum=1, precision=0)
+                    pdf_prompt = gr.Textbox(
+                        label="Custom Prompt",
+                        placeholder="e.g., List the key points",
+                        value="List the key points",
+                        lines=3
+                    )
+                    pdf_src_lang = gr.Dropdown(label="Source Language", choices=CHAT_IMAGE_LANGUAGES, value="english")
+                    pdf_tgt_lang = gr.Dropdown(label="Target Language", choices=CHAT_IMAGE_LANGUAGES, value="kannada")
+                    pdf_submit = gr.Button("Process")
+                with gr.Column():
+                    pdf_output = gr.JSON(label="PDF Response")
+            pdf_submit.click(
+                fn=process_pdf,
+                inputs=[pdf_input, pdf_page, pdf_prompt, pdf_src_lang, pdf_tgt_lang],
+                outputs=pdf_output
+            )
+
 
 # Launch the interface
 if __name__ == "__main__":
