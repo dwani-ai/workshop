@@ -11,6 +11,9 @@ import time
 import uuid
 from openai import OpenAI
 import re
+from dotenv import load_dotenv
+
+load_dotenv
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

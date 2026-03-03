@@ -12,7 +12,7 @@ It can be self-hosted and designed for Indian + European languages .
 
 ### Install the library
 ```bash
-pip install --upgrade dwani
+pip install -r requirements.txt
 ```
 
 ### Setup the credentials
