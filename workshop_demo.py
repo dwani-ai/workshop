@@ -1,19 +1,14 @@
 import gradio as gr
-import requests
 import dwani
 import os
 import tempfile
 import logging
-from PIL import Image
-import urllib.parse
-import json
 import time
 import uuid
 from openai import OpenAI
-import re
 from dotenv import load_dotenv
 
-load_dotenv
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
