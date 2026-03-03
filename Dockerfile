@@ -22,7 +22,7 @@ RUN apk add --no-cache \
 
 # Copy requirements.txt and install other Python deps (skip pyaudio if listed)
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user gradio dwani
+RUN pip install --no-cache-dir --user gradio dwani python-dotenv
 
 # Stage 2: Final stage
 FROM python:3.10-alpine
