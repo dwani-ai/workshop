@@ -12,7 +12,7 @@ It can be self-hosted and designed for Indian + European languages .
 
 ### Install the library
 ```bash
-pip install --upgrade dwani
+pip install -r requirements.txt
 ```
 
 ### Setup the credentials
@@ -135,28 +135,27 @@ print(result)
 |----------|-----------------------------------------------|---------------------------------------------|
 | ![Answer Engine](docs/images/kannada-answer-engine.drawio.png "Engine") | ![Answer Engine Translation](docs/images/kannada-answer-engine-translate.png "Engine") | ![Voice Translation](docs/images/voice-translation.drawio.png "Voice Translation") |
 
-<!-- 
 
-nohup python src/server/main.py --port 7860 > server.log 2>&1 &
+- Docker for Workshop
 
+
+- Build Docker 
+```bash
 docker build -t dwani/workshop:latest -f Dockerfile .
+```
+```
+export DWANI_API_BASE_URL=some_url
+export DWANI_API_KEY=some_kel
+```
 
 
-docker build -t dwani/workshop:latest -f app.Dockerfile .
+docker run -p 80:8000 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL  dwani/workshop:latest
+
+<!-->
+docker run -p 80:8000 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url>  dwani/workshop:latest
 
 docker push dwani/workshop:latest
 
-export DWANI_API_BASE_URL=
-export DWANI_API_KEY=
-export GPT_OSS_API_URL=
-export GEMMA_VLLM_IP=
-
-docker run -p 80:80 --env DWANI_API_KEY=<your_key> --env DWANI_API_BASE_URL=<your_url>  --env GPT_OSS_API_URL=<gpt_url> --env GEMMA_VLLM_IP=<gemma_ip> dwani/workshop:latest
-
-docker run -p 80:80 --env DWANI_API_KEY=$DWANI_API_KEY --env DWANI_API_BASE_URL=$DWANI_API_BASE_URL --env GPT_OSS_API_URL=$GPT_OSS_API_URL --env GEMMA_VLLM_IP=$GEMMA_VLLM_IP  dwani/workshop:latest
-
-
-pip install git+https://github.com/dwani-ai/dwani-python-sdk.git@document-sppedup-v2
 -->
 
 - Project is MIT Licensed
